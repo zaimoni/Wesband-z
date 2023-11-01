@@ -1424,9 +1424,9 @@ local function constructUnit(var, unstore)
 				name = "submerge",
 				female_name = "female^submerge",
 				description = "Submerge:\nThis unit can hide in deep water, and remain undetected by its enemies.\n\nEnemy units cannot see this unit while it is in deep water, except if they have units next to it. Any enemy unit that first discovers this unit immediately loses all its remaining movement.",
-			        name_inactive = "submerge",
-			        female_name_inactive = "female^submerge",
-			        description_inactive = "Submerge:\nThis unit can hide in deep water, and remain undetected by its enemies.\n\nEnemy units cannot see this unit while it is in deep water, except if they have units next to it. Any enemy unit that first discovers this unit immediately loses all its remaining movement.",
+					name_inactive = "submerge",
+					female_name_inactive = "female^submerge",
+					description_inactive = "Submerge:\nThis unit can hide in deep water, and remain undetected by its enemies.\n\nEnemy units cannot see this unit while it is in deep water, except if they have units next to it. Any enemy unit that first discovers this unit immediately loses all its remaining movement.",
 					affect_self = "yes",
 					{ "filter_self", {
 						{ "filter_location", {

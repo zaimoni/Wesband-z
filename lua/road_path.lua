@@ -2,11 +2,11 @@ local helper = wesnoth.require "lua/helper.lua"
 local LS = wesnoth.require "location_set"
 
 local function on_board(x, y)
-        if type(x) ~= "number" or type(y) ~= "number" then
-                return false
-        end
-        local w, h = wesnoth.get_map_size()
-        return x >= 1 and y >= 1 and x <= w and y <= h
+		if type(x) ~= "number" or type(y) ~= "number" then
+				return false
+		end
+		local w, h = wesnoth.get_map_size()
+		return x >= 1 and y >= 1 and x <= w and y <= h
 end
 
 local function insert_locs(x, y, locs_set)
