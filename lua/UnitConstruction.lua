@@ -61,16 +61,16 @@ function eval_item(item)
 			ret.cat = "melee_weapon"
 		elseif item.range == "ranged" then
 			ret.cat = "ranged_weapon"
-		elseif name == "clothes" or icon == "armor/tunic" then
+		elseif ret.name == "clothes" or ret.icon == "armor/tunic" then
 			ret.cat = "torso_armor"
-		elseif name == "pants_shoes" or name == "loincloth" or icon == "armor/shoes" then
+		elseif ret.name == "pants_shoes" or ret.name == "loincloth" or ret.icon == "armor/shoes" then
 			ret.cat = "legs_armor"
-		elseif icon == "armor/head" or icon == "armor/elf-head" or icon == "armor/troll-head" then
+		elseif ret.icon == "armor/head" or ret.icon == "armor/elf-head" or ret.icon == "armor/troll-head" then
 			ret.cat = "head_armor"
-		elseif icon == "categories/armor-arms" then
+		elseif ret.icon == "categories/armor-arms" then
 			ret.cat = "shield"
 		else
-			std_print(dump_value(wml_item, "bad_item", "", "  ", 24) .. "\n")
+			std_print(dump_lua_value(item, "bad_item", "", "  ", 24) .. "\n")
 			H.wml_error("category missing and could not determine from other properties")
 		end
 	end
@@ -134,6 +134,7 @@ local function eval_equipment(unit)
 					adjust.melee1_name = item.name
 					adjust.melee1_user_name = item.name
 					adjust.magic_type = info.magic_type
+					adjust.magic_bonus = info.magic_bonus or 0
 				end
 				for k, v in pairs(info.adjust) do
 					adjust[k] = num_or(adjust[k]) + v
