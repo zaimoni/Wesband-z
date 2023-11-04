@@ -5,6 +5,15 @@ W = H.set_wml_action_metatable {}
 
 --H.set_wml_var_metatable(_G)
 
+function constipate(t)
+    return setmetatable({}, {
+        __index = t,
+        __newindex = function(t, k, v)
+            werr("attempt to modify constant: " .. tostring(k) .. " to " .. tostring(v))
+        end
+    })
+end
+
 -- Define your global functions here.
 
 -- chat tags,
