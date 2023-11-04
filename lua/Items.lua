@@ -2621,12 +2621,19 @@ function update_loot_menu(x, y)
 		nearby_items = string.format(fmt, nitems)
 	elseif msgs_index < 9 then
 		nearby_items = string.format(fmt, gold, nitems)
-	elseif msgs_index < 11 then
-		nearby_items = string.format(fmt, last_item.description)
 	else
-		nearby_items = string.format(fmt, gold, last_item.description)
-	end
+		-- goddamn usables
+		local desc = last_item.description:split("\n")[1]
+		if string.sub(desc, -1) == ":" then
+			desc = string.sub(desc, 1, -2)
+		end
 
+		if msgs_index < 11 then
+			nearby_items = string.format(fmt, desc)
+		else
+			nearby_items = string.format(fmt, gold, desc)
+		end
+	end
 -- 	std_print("nearby_items: " .. nearby_items)
 -- 	std_print(dump_lua_value(nearby_items, "nearby_items"))
 
