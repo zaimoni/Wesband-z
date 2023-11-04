@@ -2,8 +2,7 @@ author="Ken Oh,Exasperation,Dovolente,TL,vghetto,daniel.santos"
 description="Wesnoth hack and slash MP or SP campaign.
 
 Ported by vghetto to the BfW 1.14 & 1.16 addon servers.
-This release merges the SP Weshack fork by vghetto back into Wesband
-"
+This release merges the SP Weshack fork by vghetto back into Wesband"
 email=daniel.santos@pobox.com
 icon="scenery/dwarven-doors-closed.png"
 passphrase=
@@ -11,7 +10,7 @@ tags="WBD,Wesband,WHK,Weshack,Hack-n-Slash,RPG,Dungeon,Dungeon-Crawling,Role-Pla
 title="Wesband"
 translate=true
 type="campaign_sp_mp"
-version="0.9.0"
+version="0.9.1-dev"
 [feedback]
 	topic_id=21234
 [/feedback]
