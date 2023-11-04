@@ -1,9 +1,9 @@
 
 function wesnoth.wml_actions.unit_action_info(cfg)
-	local unit_var = cfg.unit or H.wml_error("[unit_action_info] requires a unit= key")
-	local dest_var = cfg.dest or H.wml_error("[unit_action_info] requires a dest= key")
-	local unit = wml.variables[unit_var] or H.wml_error("[unit_action_info] unit not valid")
-	local vars = wml.variables[unit_var .. ".variables"] or H.wml_error("[unit_action_info] unit missing [variables]")
+	local unit_var = cfg.unit or werr("[unit_action_info] requires a unit= key")
+	local dest_var = cfg.dest or werr("[unit_action_info] requires a dest= key")
+	local unit = wml.variables[unit_var] or werr("[unit_action_info] unit not valid")
+	local vars = wml.variables[unit_var .. ".variables"] or werr("[unit_action_info] unit missing [variables]")
 	local magic_casting = wml.variables[unit_var .. ".variables.abilities.magic_casting"]
 
 	local simple_action = vars.simple_action or 0
@@ -52,7 +52,7 @@ end
 -- end
 
 function wesnoth.wml_actions.cast_spell(cfg)
-	local var = cfg.variable or H.wml_error("[cast_spell] requires a variable= key")
+	local var = cfg.variable or werr("[cast_spell] requires a variable= key")
 	local clear = cfg.clear
 
 

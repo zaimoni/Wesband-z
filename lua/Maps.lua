@@ -18,7 +18,7 @@ function wesnoth.wml_actions.generate_dungeon_level(cfg)
 end
 
 function wesnoth.wml_actions.restore_map(cfg)
-	local var = cfg.variable or H.wml_error("[restore_map] requires a variable= key")
+	local var = cfg.variable or werr("[restore_map] requires a variable= key")
 	local clear = cfg.clear
 
 	local data = wml.variables[var]
@@ -62,7 +62,7 @@ function wesnoth.wml_actions.restore_map(cfg)
 end
 
 function wesnoth.wml_actions.save_map(cfg)
-	local var = cfg.variable or H.wml_error("[save_map] requires a variable= key")
+	local var = cfg.variable or werr("[save_map] requires a variable= key")
 
 	local w, h, b = wesnoth.get_map_size()
 	local t, s = {}, {}
@@ -99,11 +99,11 @@ function wesnoth.wml_actions.save_map(cfg)
 end
 
 function wesnoth.wml_actions.create_exit(cfg)
-	local x = cfg.x or H.wml_error("[create_exit] requires an x= key")
-	local y = cfg.y or H.wml_error("[create_exit] requires a y= key")
-	local dest = cfg.destination or H.wml_error("[create_exit] requires a destination= key")
-	local image = cfg.image or H.wml_error("[create_exit] requires an image= key")
-	local label = cfg.label or H.wml_error("[create_exit] requires a label= key")
+	local x = cfg.x or werr("[create_exit] requires an x= key")
+	local y = cfg.y or werr("[create_exit] requires a y= key")
+	local dest = cfg.destination or werr("[create_exit] requires a destination= key")
+	local image = cfg.image or werr("[create_exit] requires an image= key")
+	local label = cfg.label or werr("[create_exit] requires a label= key")
 
 	wml.variables[string.format("ground.x%d.y%d.exit.destination", x, y)] = dest
 	wml.variables[string.format("ground.x%d.y%d.exit.image", x, y)] = image

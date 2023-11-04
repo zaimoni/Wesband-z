@@ -17,7 +17,7 @@ function prob_list_eval(cfg)
 -- 	std_print(dump_lua_value(pl, "pl"))
 
 	if #pl.items ~= #pl.weights then
-		H.wml_error("in prob_list " .. list.name .. ", count of items and weights do not match")
+		werr("in prob_list " .. list.name .. ", count of items and weights do not match")
 	end
 
 	pl.count = #pl.items
@@ -25,7 +25,7 @@ function prob_list_eval(cfg)
 	for i = 1, pl.count do
 		local weight = tonumber(pl.weights[i])
 		if not weight then
-			H.wml_error(string.format("in prob_list %s, weight entry %d is not a number: '%s'",
+			werr(string.format("in prob_list %s, weight entry %d is not a number: '%s'",
 									  list.name, i, pl.weights[i]))
 		end
 		total_weight = total_weight + weight
@@ -39,10 +39,10 @@ function prob_list_eval(cfg)
 end
 
 function wesnoth.wml_actions.prob_list(cfg)
-	local name    = cfg.name or H.wml_error("[prob_list] requires a name= key")
+	local name    = cfg.name or werr("[prob_list] requires a name= key")
 	local lcfg    = wml.literal(cfg)
-	local items   = lcfg.items or H.wml_error("[prob_list] requires a items= key")
-	local weights = lcfg.weights or H.wml_error("[prob_list] requires a weights= key")
+	local items   = lcfg.items or werr("[prob_list] requires a items= key")
+	local weights = lcfg.weights or werr("[prob_list] requires a weights= key")
 	local literal = cfg.literal or false
 	local list    = {
 		name    = name,
@@ -65,9 +65,9 @@ function wesnoth.wml_actions.prob_list(cfg)
 end
 
 function wesnoth.wml_actions.prob_list_old(cfg)
-	local list = cfg.name or H.wml_error("[prob_list] requires a name= key")
-	local items = cfg.items or H.wml_error("[prob_list] requires a items= key")
-	local weights = cfg.weights or H.wml_error("[prob_list] requires a weights= key")
+	local list = cfg.name or werr("[prob_list] requires a name= key")
+	local items = cfg.items or werr("[prob_list] requires a items= key")
+	local weights = cfg.weights or werr("[prob_list] requires a weights= key")
 	local entries = {}
 	for i in string.gmatch(items, "[%s]*([^,]+),?") do
 		table.insert(entries, i)
@@ -190,22 +190,22 @@ function wesnoth.wml_actions.set_prob(cfg)
 		end
 	end
 
-	local op = cfg.op or H.wml_error("[set_prob] requires an op= key.")
-	list = cfg.name or H.wml_error("[set_prob] requires a name= key.")
+	local op = cfg.op or werr("[set_prob] requires an op= key.")
+	list = cfg.name or werr("[set_prob] requires a name= key.")
 	if op == "clear" then
-		id = cfg.item or H.wml_error("[set_prob] clear requires an item= key.")
+		id = cfg.item or werr("[set_prob] clear requires an item= key.")
 		probClear()
 	elseif op == "set" then
-		id = cfg.item or H.wml_error("[set_prob] set requires an item= key.")
-		weight = cfg.weight or H.wml_error("[set_prob] set requires a weight= key.")
+		id = cfg.item or werr("[set_prob] set requires an item= key.")
+		weight = cfg.weight or werr("[set_prob] set requires a weight= key.")
 		if weight > 0 then
 			probSet()
 		else
 			probClear()
 		end
 	elseif op == "add" then
-		id = cfg.item or H.wml_error("[set_prob] add requires an item= key.")
-		weight = cfg.weight or H.wml_error("[set_prob] add requires a weight= key.")
+		id = cfg.item or werr("[set_prob] add requires an item= key.")
+		weight = cfg.weight or werr("[set_prob] add requires a weight= key.")
 		if weight > 0 then
 			probAdd()
 		elseif cfg.weight < 0 then
@@ -213,8 +213,8 @@ function wesnoth.wml_actions.set_prob(cfg)
 			probSub()
 		end
 	elseif op == "sub" then
-		id = cfg.item or H.wml_error("[set_prob] sub requires an item= key.")
-		weight = cfg.weight or H.wml_error("[set_prob] sub requires a weight= key.")
+		id = cfg.item or werr("[set_prob] sub requires an item= key.")
+		weight = cfg.weight or werr("[set_prob] sub requires a weight= key.")
 		if weight > 0 then
 			probSub()
 		elseif weight < 0 then
@@ -222,27 +222,27 @@ function wesnoth.wml_actions.set_prob(cfg)
 			probAdd()
 		end
 	elseif op == "scale" then
-		id = cfg.item or H.wml_error("[set_prob] scale requires an item= key.")
-		weight = cfg.weight or H.wml_error("[set_prob] scale requires a weight= key.")
+		id = cfg.item or werr("[set_prob] scale requires an item= key.")
+		weight = cfg.weight or werr("[set_prob] scale requires a weight= key.")
 		if weight <= 0 then
 			probClear()
 		elseif weight ~= 100 then
 			probScale()
 		end
 	elseif op == "union" then
-		var = cfg.with_list or H.wml_error("[set_prob] union operation requires a with_list= key.")
+		var = cfg.with_list or werr("[set_prob] union operation requires a with_list= key.")
 		probUnion()
 	elseif op == "diff" then
-		var = cfg.with_list or H.wml_error("[set_prob] diff operation requires a with_list= key.")
+		var = cfg.with_list or werr("[set_prob] diff operation requires a with_list= key.")
 		probDiff()
 	else
-		H.wml_error(string.format("Invalid [set_prob] operation: %s.", op))
+		werr(string.format("Invalid [set_prob] operation: %s.", op))
 	end
 end
 
 function wesnoth.wml_actions.get_prob(cfg)
-	local var   = cfg.variable	or H.wml_error("[get_prob] requires a variable= key.")
-	local name  = cfg.name		or H.wml_error("[get_prob] requires a name= key.")
+	local var   = cfg.variable	or werr("[get_prob] requires a variable= key.")
+	local name  = cfg.name		or werr("[get_prob] requires a name= key.")
 	local list  = wml.variables[name]
 	if list.literal then
 		list = prob_list_eval(wml.tovconfig(list))
@@ -262,5 +262,5 @@ function wesnoth.wml_actions.get_prob(cfg)
 		end
 	end
 
-	H.wml_error(string.format("Failed to find an entry for %s", list))
+	werr(string.format("Failed to find an entry for %s", list))
 end

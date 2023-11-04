@@ -47,7 +47,7 @@ local function on_board_path(u, x, y)
 end
 
 function wesnoth.wml_actions.rouse_units(cfg)
-	local x, y = cfg.x or H.wml_error("[rouse_units] expects an x= attribute"), cfg.y or H.wml_error("[rouse_units] expects a y= attribute")
+	local x, y = cfg.x or werr("[rouse_units] expects an x= attribute"), cfg.y or werr("[rouse_units] expects a y= attribute")
 	local min_index = -1
 	local hidden = false
 	local rouse_enemies
@@ -213,9 +213,9 @@ function wesnoth.wml_actions.rouse_units(cfg)
 end
 
 function wesnoth.wml_actions.check_safety(cfg)
-	local x = cfg.x or H.wml_error("[check_safety] expects an x= attribute")
-	local y = cfg.y or H.wml_error("[check_safety] expects a y= attribute")
-	local v = cfg.variable or H.wml_error("[check_safety] requires a variable= key")
+	local x = cfg.x or werr("[check_safety] expects an x= attribute")
+	local y = cfg.y or werr("[check_safety] expects a y= attribute")
+	local v = cfg.variable or werr("[check_safety] requires a variable= key")
 
 	local safety = checkSafety(x, y)
 	if not safety then
@@ -224,8 +224,8 @@ function wesnoth.wml_actions.check_safety(cfg)
 end
 
 function wesnoth.wml_conditionals.is_safe(cfg)
-	local x = cfg.x or H.wml_error("[is_safe] expects an x= attribute")
-	local y = cfg.y or H.wml_error("[is_safe] expects a y= attribute")
+	local x = cfg.x or werr("[is_safe] expects an x= attribute")
+	local y = cfg.y or werr("[is_safe] expects a y= attribute")
 
 	return checkSafety(x, y)
 end

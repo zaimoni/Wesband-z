@@ -71,7 +71,7 @@ function eval_item(item)
 			ret.cat = "shield"
 		else
 			std_print(dump_lua_value(item, "bad_item", "", "  ", 24) .. "\n")
-			H.wml_error("category missing and could not determine from other properties")
+			werr("category missing and could not determine from other properties")
 		end
 	end
 -- 	std_print(wml.tostring(item))
@@ -201,7 +201,7 @@ local function get_p(parsed, relative)
 					t = nil
 				end
 			else
-				H.wml_error(string.format("malformed path segment: %s", pn))
+				werr(string.format("malformed path segment: %s", pn))
 			end
 		end
 	end
@@ -246,7 +246,7 @@ local function clear_p(parsed, relative)
 							parsed.c[p] = nil
 						end
 					else
-						H.wml_error(string.format("malformed path segment: %s", relative))
+						werr(string.format("malformed path segment: %s", relative))
 					end
 				end
 			end
@@ -299,7 +299,7 @@ local function set_p(parsed, relative, value, pflag)
 							table.insert(parsed.c[p], i, parse_container(value))
 						end
 					else
-						H.wml_error(string.format("attempt to assign scalar value to array element: %s", relative))
+						werr(string.format("attempt to assign scalar value to array element: %s", relative))
 					end
 				else
 					p = string.match(relative, "^([%a%d_]+)$")
@@ -315,7 +315,7 @@ local function set_p(parsed, relative, value, pflag)
 							parsed.k[p] = value
 						end
 					else
-						H.wml_error(string.format("malformed path segment: %s", relative))
+						werr(string.format("malformed path segment: %s", relative))
 					end
 				end
 			end
@@ -713,8 +713,8 @@ function get_attack_basics_light(unit, weapon)
 end
 
 function wesnoth.wml_actions.calculate_weapon_display(args)
-	local unit_var = args.unit_variable or H.wml_error("[calculate_weapon_display] requires a unit_variable= key")
-	local weapon_var = args.weapon_variable or H.wml_error("[calculate_weapon_display] requires a weapon_variable= key")
+	local unit_var = args.unit_variable or werr("[calculate_weapon_display] requires a unit_variable= key")
+	local weapon_var = args.weapon_variable or werr("[calculate_weapon_display] requires a weapon_variable= key")
 	local unit = parse_container(wml.variables[unit_var])
 	local equipment = get_unit_equipment(unit)
 	local weapon = parse_container(wml.variables[weapon_var])
@@ -1282,7 +1282,7 @@ local function constructUnit(var, unstore)
 	local function set_movetype(terrain)
 		local function check_num(data)
 			if type(data) ~= "number" then
-				H.wml_error(tostring(data) .. "is not a number")
+				werr(tostring(data) .. "is not a number")
 			end
 		end
 		set_p(unit, "defense." .. terrain, math.max(20, get_n(unit, string.format("variables.terrain.%s.defense", terrain)) - math.max(0, evade) + math.max(0, get_n(equipment.torso_armor, string.format("terrain.%s.defense", terrain)) + get_n(equipment.leg_armor, string.format("terrain.%s.defense", terrain)) - shield_recoup)))
@@ -3241,7 +3241,7 @@ local function constructUnit(var, unstore)
 
 end
 function wesnoth.wml_actions.construct_unit(cfg)
-	local var = cfg.variable or H.wml_error("[construct_unit] requires a variable= key")
+	local var = cfg.variable or werr("[construct_unit] requires a variable= key")
 	local unstore = nil
 	if type(cfg.unstore) ~= "boolean" then
 		unstore = true
@@ -3251,7 +3251,7 @@ function wesnoth.wml_actions.construct_unit(cfg)
 	constructUnit(var, unstore)
 end
 function wesnoth.wml_actions.unit_npc_init(cfg)
-	local var = cfg.variable or H.wml_error("[unit_npc_init] requires a variable= key")
+	local var = cfg.variable or werr("[unit_npc_init] requires a variable= key")
 	local unit = parse_container(wml.variables[var])
 	--std_print("unit_npc_init = " .. var .. " Type = " .. get_p(unit, "type"))
 	local tcfg = wesnoth.unit_types[string.format("%s", get_p(unit, "type"))].__cfg or {}
@@ -3278,8 +3278,8 @@ function wesnoth.wml_actions.unit_npc_init(cfg)
 	wml.variables[string.format("%s.variables.npc_init", var)] = npc_init
 end
 function wesnoth.wml_actions.create_attack_weapon(cfg)
-	local var = cfg.variable or H.wml_error("[create_attack_weapon] requires a variable= key")
-	local attack = cfg.attack or H.wml_error("[create_attack_weapon] requires a attack= key")
+	local var = cfg.variable or werr("[create_attack_weapon] requires a variable= key")
+	local attack = cfg.attack or werr("[create_attack_weapon] requires a attack= key")
 	local at = parse_container(wml.variables[attack])
 	local s = {}
 
@@ -3373,8 +3373,8 @@ function wesnoth.wml_actions.create_attack_weapon(cfg)
 	wml.variables[var] = unparse_container(at)
 end
 function wesnoth.wml_actions.set_default_abilities(cfg)
-	local var = cfg.variable or H.wml_error("[set_default_abilities] requires a variable= key")
-	local ability = cfg.ability or H.wml_error("[set_default_abilities] requires a attack= key")
+	local var = cfg.variable or werr("[set_default_abilities] requires a variable= key")
+	local ability = cfg.ability or werr("[set_default_abilities] requires a attack= key")
 	local ab = parse_container(wml.variables[ability])
 	local v = parse_container(wml.variables[var])
 
@@ -3408,7 +3408,7 @@ end
 --     [/terrain]
 function wesnoth.wml_actions.unit_init_terrain(cfg)
 	local src_var = cfg.src
-	local dest = cfg.dest or H.wml_error("[unit_init_terrain] requires a dest= key")
+	local dest = cfg.dest or werr("[unit_init_terrain] requires a dest= key")
 	local mode = cfg.mode or "replace"
 	local result = {}
 	local src, k, v
@@ -3421,9 +3421,9 @@ function wesnoth.wml_actions.unit_init_terrain(cfg)
 	end
 
 	if src_var and src then
-		H.wml_error("[unit_init_terrain] requires either a src= key or [terrain], but not both.")
+		werr("[unit_init_terrain] requires either a src= key or [terrain], but not both.")
 	elseif not (src_var or src) then
-		H.wml_error("[unit_init_terrain] requires either a src= key or [terrain].")
+		werr("[unit_init_terrain] requires either a src= key or [terrain].")
 	elseif src_var then
 		src = wml.variables[src_var]
 	end

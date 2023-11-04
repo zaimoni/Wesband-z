@@ -2,7 +2,15 @@ H = wesnoth.require "lua/helper.lua"
 W = H.set_wml_action_metatable {}
 -- Define your global constants here.
 
-
+if wesnoth.current_version() < wesnoth.version(1, 16, 0) then
+	function werr(msg)
+		werr(msg)
+	end
+else
+	function werr(msg)
+		wml.error(msg)
+	end
+end
 --H.set_wml_var_metatable(_G)
 
 function constipate(t)
@@ -57,8 +65,8 @@ end
 --     variable=shroud_data
 -- [/store_shroud]
 function wesnoth.wml_actions.store_shroud(cfg)
-	local team_num = cfg.side or H.wml_error("[store_shroud] expects a side= attribute.")
-	local var = cfg.variable or H.wml_error("[store_shroud] expects a variable= attribute.")
+	local team_num = cfg.side or werr("[store_shroud] expects a side= attribute.")
+	local var = cfg.variable or werr("[store_shroud] expects a variable= attribute.")
 	--local team = wesnoth.get_side(team_num)
 	local team = wesnoth.sides[team_num]
 	local current_shroud = team.__cfg.shroud_data
@@ -75,12 +83,12 @@ end
 --     shroud_data=$shroud_data # stored with store_shroud, for example!
 -- [/set_shroud]
 function wesnoth.wml_actions.set_shroud(cfg)
-	local team_num = cfg.side or H.wml_error("[store_shroud] expects a side= attribute.")
-	local shroud = cfg.shroud_data or H.wml_error("[store_shroud] expects a shroud_data= attribute.")
+	local team_num = cfg.side or werr("[store_shroud] expects a side= attribute.")
+	local shroud = cfg.shroud_data or werr("[store_shroud] expects a shroud_data= attribute.")
 	if shroud == nil then
-		H.wml_error("[set_shroud] was passed a nil shroud string")
+		werr("[set_shroud] was passed a nil shroud string")
 	elseif string.sub(shroud,1,1)~="|" then
-		H.wml_error("[set_shroud] was passed an invalid shroud string.")
+		werr("[set_shroud] was passed an invalid shroud string.")
 	else
 		local w,h,b=wesnoth.get_map_size()
 		local shroud_x= (1-b)
@@ -100,42 +108,42 @@ function wesnoth.wml_actions.set_shroud(cfg)
 end
 
 function wesnoth.wml_actions.get_distance(cfg)
-	local x1 = cfg.x1 or H.wml_error("[get_distance] expects a x1= attribute")
-	local y1 = cfg.y1 or H.wml_error("[get_distance] expects a y1= attribute")
-	local x2 = cfg.x2 or H.wml_error("[get_distance] expects a x2= attribute")
-	local y2 = cfg.y2 or H.wml_error("[get_distance] expects a y2= attribute")
+	local x1 = cfg.x1 or werr("[get_distance] expects a x1= attribute")
+	local y1 = cfg.y1 or werr("[get_distance] expects a y1= attribute")
+	local x2 = cfg.x2 or werr("[get_distance] expects a x2= attribute")
+	local y2 = cfg.y2 or werr("[get_distance] expects a y2= attribute")
 	local var_name = cfg.variable or "distance"
 	wml.variables[var_name] = wesnoth.map.distance_between(x1, y1, x2, y2)
 end
 
 function wesnoth.wml_actions.get_defense(cfg)
-	local terrain = cfg.terrain or wesnoth.get_terrain(cfg.x, cfg.y) or H.wml_error("[get_defense] expects either a terrain= attribute or x= and y= attributes")
+	local terrain = cfg.terrain or wesnoth.get_terrain(cfg.x, cfg.y) or werr("[get_defense] expects either a terrain= attribute or x= and y= attributes")
 	local u
 	if cfg.unit then
 		local upath = wml.variables[cfg.unit]
 		u = wesnoth.get_units({ id = upath.id })[1]
 	else
-		u = (wesnoth.create_unit { type = cfg.type or H.wml_error("[get_defense] expects either a unit= attribute or a type= attribute") })
+		u = (wesnoth.create_unit { type = cfg.type or werr("[get_defense] expects either a unit= attribute or a type= attribute") })
 	end
 	local var = cfg.variable or "defense"
 	wml.variables[var] = wesnoth.unit_defense(u, terrain)
 end
 
 function wesnoth.wml_actions.get_move_cost(cfg)
-	local terrain = cfg.terrain or wesnoth.get_terrain(cfg.x, cfg.y) or H.wml_error("[get_move_cost] expects either a terrain= attribute or x= and y= attributes")
+	local terrain = cfg.terrain or wesnoth.get_terrain(cfg.x, cfg.y) or werr("[get_move_cost] expects either a terrain= attribute or x= and y= attributes")
 	local u
 	if cfg.unit then
 		local upath = wml.variables[cfg.unit]
 		u = wesnoth.get_units({ id = upath.id })[1]
 	else
-		u = (wesnoth.create_unit { type = cfg.type }) or H.wml_error("[get_defense] expects either a unit= attribute or a type= attribute")
+		u = (wesnoth.create_unit { type = cfg.type }) or werr("[get_defense] expects either a unit= attribute or a type= attribute")
 	end
 	local var = cfg.variable or "movement_cost"
 	wml.variables[var] = wesnoth.unit_movement_cost(u, terrain)
 end
 
 function wesnoth.wml_actions.generate_shop_details(cfg)
-	local shop = cfg.shop or H.wml_error("[generate_shop_details]: no shop attribute given")
+	local shop = cfg.shop or werr("[generate_shop_details]: no shop attribute given")
 
 	local unit_type, shop_descriptors
 
@@ -153,7 +161,7 @@ function wesnoth.wml_actions.generate_shop_details(cfg)
 		unit_type = H.rand("Ruffian,Thug,Dwarvish Dragonguard,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Sentinel,Dwarvish Thunderer")
 		shop_descriptors = "Tavern,Pub,Public House"
 	else
-		H.wml_error(string.format("[generate_name]: invalid shop attribute given: %s", shop))
+		werr(string.format("[generate_name]: invalid shop attribute given: %s", shop))
 	end
 
 	local u = wesnoth.create_unit { type = unit_type, random_gender = "yes" }
@@ -247,13 +255,13 @@ function wml2lua_table(wml)
 
 	for k, v in pairs(wml) do
 		if type(v) == "table" then
--- 			if type(key) ~= "string" then H.wml_error(string.format("malformed")) end
--- 			if #v ~= 2 then H.wml_error(string.format("malformed")) end
+-- 			if type(key) ~= "string" then werr(string.format("malformed")) end
+-- 			if #v ~= 2 then werr(string.format("malformed")) end
 			local key = v[1]
 			if result[key] == nil then
 				result[key] = {}
 			elseif type(result[key]) ~= "table" then
-				H.wml_error(string.format("Cannot use wml2lua_table on this WML container " ..
+				werr(string.format("Cannot use wml2lua_table on this WML container " ..
 							"because the key %s maps to both a scalar and a container, though" ..
 							"this is valid WML.", key))
 			end
@@ -266,7 +274,7 @@ end
 
 function lua_table2wml(t)
 	if type(t) ~= "table" then
-		H.wml_error(string.format("not a table"))
+		werr(string.format("not a table"))
 	end
 	local wml = {}
 	local k, v
@@ -316,7 +324,7 @@ function noarr_wml2lua_table(wml)
 				else
 					reason = "maps to both a scalar and a container"
 				end
-				H.wml_error(string.format("Cannot use noarr_wml2lua_table on this WML container " ..
+				werr(string.format("Cannot use noarr_wml2lua_table on this WML container " ..
 							"because the key %s %s, though" ..
 							"this is valid WML.", key, reason))
 			end
@@ -329,7 +337,7 @@ end
 
 function noarr_lua_table2wml(t)
 	if type(t) ~= "table" then
-		H.wml_error(string.format("not a table"))
+		werr(string.format("not a table"))
 	end
 	local wml = {}
 	local k, v

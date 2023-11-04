@@ -113,7 +113,7 @@ function deepcopy(orig)
 end
 
 function wesnoth.wml_actions.dump_variable(args)
-	local name = args.name or H.wml_error("[dump_variable] requires a name= key")
+	local name = args.name or werr("[dump_variable] requires a name= key")
 	local var = wml.variables[name]
 	std_print("[dump_variable] name=" .. name)
 	w_pt(var)
@@ -245,7 +245,7 @@ function dump_lua_value(node, name, indent, indent_next, max_key_pad, allow_fold
 end
 
 function dump_lua_table(node, indent, indent_next, max_key_pad, allow_folding)
-	node = node or H.wml_error("dump_lua_table() missing required node argument")
+	node = node or werr("dump_lua_table() missing required node argument")
 	indent_next = indent_next or "  "
 	max_key_pad = max_key_pad or 24
 	indent = indent or ""
@@ -335,9 +335,9 @@ function dump(args, mode, called_as)
 	end
 
 	if not (var or value) then
-		H.wml_error(tag_open .. " requires either var= or value= attribute")
+		werr(tag_open .. " requires either var= or value= attribute")
 	elseif var and value then
-		H.wml_error(tag_open .. " requires either var= or value= attribute, but not both.")
+		werr(tag_open .. " requires either var= or value= attribute, but not both.")
 	elseif var then
 		var = tostring(var)
 		value = wml.variables[var]
@@ -357,7 +357,7 @@ function dump(args, mode, called_as)
 		elseif mode == "wml2lua" then
 			lua = wml2lua_table(value)
 		else
-			H.wml_error("[dump] received invalid mode= atrribute: " .. mode)
+			werr("[dump] received invalid mode= atrribute: " .. mode)
 		end
 
 		result = dump_lua_value(lua, name, "  ")
