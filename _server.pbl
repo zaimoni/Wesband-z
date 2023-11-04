@@ -11,7 +11,7 @@ tags="WBD,WHK"
 title="Weshack"
 translate=true
 type="campaign_sp_mp"
-version="0.9.0-rc1"
+version="0.9.0"
 [feedback]
 	topic_id=21234
 [/feedback]
