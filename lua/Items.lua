@@ -2536,7 +2536,16 @@ function wesnoth.wml_conditionals.is_near_loot(cfg)
 	return false
 end
 
-local loot_msgs = {
+loot_menu = {
+	show	= false,
+	x		= 0,
+	y		= 0,
+	unit_id	= nil,
+	radius	= 0
+}
+
+
+local loot_msgs = constipate({
 	_"",
 	_"",
 	_"Pick up %d gold",
@@ -2549,25 +2558,87 @@ local loot_msgs = {
 	_"Pick up %s nearby",
 	_"Pick up %d gold and %s",
 	_"Pick up %d gold and %s nearby"
-}
+})
+
+function wesnoth.wml_conditionals.show_loot_menu(cfg)
+	local x = cfg.x or werr("[show_loot_menu] requires x attribute")
+	local y = cfg.y or werr("[show_loot_menu] requires y attribute")
+-- 	local id = cfg.x or werr("[show_loot_menu] requires id attribute")
+
+	if not (loot_menu.show and loot_menu.x == x and loot_menu.y == y) then
+-- 		std_print(dump_lua_value({
+-- 				loot_menu	= loot_menu,
+-- 				x			= x,
+-- 				y			= y,
+-- 				result		= false,
+-- 			},
+-- 			"show_loot_menu"
+-- 		))
+		return false
+	end
+
+	local unit = wesnoth.units.get(x, y)
+	if unit.id ~= loot_menu.unit_id then
+		std_print(string.format("Exepcted unit %s at x, y, found %s"), loot_menu.unit_id, x, y, unit.id)
+		return false
+	end
+-- 	std_print(dump_lua_value({
+-- 			loot_menu	= loot_menu,
+-- 			x			= x,
+-- 			y			= y,
+-- 			unit_id		= unit.id,
+-- 			result		= true,
+-- 		},
+-- 		"show_loot_menu"
+-- 	))
+	return true
+end
 
 function update_loot_menu(x, y)
--- 	local unit =  wesnoth.units.get(x, y)
+	loot_menu.show = false
+
+	local unit = wesnoth.units.get(x, y)
+	if not unit then
+-- 		std_print(string.format("hide none, %d, %d", x, y))
+		return
+	end
+
+	if unit.type == "WBD Unknown Adventurer" then
+-- 		std_print(string.format("hide chrysalis, %d, %d", x, y))
+		return
+	end
+
+-- 	std_print(string.format("hide %s checking... %d, %d", unit.name, x, y))
+	local total_actions = tonumber(unit.attacks_left) + tonumber(unit.variables.simple_action)
+-- 	tonumber(unit.moves)
+	if total_actions == 0 then
+-- 		std_print(string.format("hide %s no actions %d, %d", unit.name, x, y))
+		return
+	end
+
 	local i, j, loc
-	local gold, nitems = 0, 0
 	local nearby_items
-	local is_safe = checkSafety(x, y)
-	local loot_radius = is_safe and 1 or 0
+	local is_safe = checkSafety(x, y) and
+					unit.moves >= unit.max_moves and
+					total_actions > 1
+	loot_menu = {
+		show	= false,
+		x		= x,
+		y		= y,
+		unit_id	= unit.id,
+		radius	= is_safe and 1 or 0
+	}
+
+	local gold, nitems = 0, 0
 	local nearby = false
 	local last_item
-
 
 	if x < 1 or y < 1 or x > 500 or y > 500 then return end
 -- 	std_print(dump_lua_value(unit, "unit"))
 -- 	if not unit or not unit.canrecruit then return end
 	local locs = {}
 	if is_safe then
-		locs = wesnoth.map.get_hexes_in_radius(x, y, loot_radius)
+		locs = wesnoth.map.get_hexes_in_radius(x, y, loot_menu.radius)
 	end
 
 	table.insert(locs, {x, y})
@@ -2606,8 +2677,13 @@ function update_loot_menu(x, y)
 	end
 
 	if gold + nitems == 0 then
+-- 		std_print(string.format("hide %s nothing in range (%d) %d, %d",
+-- 				  unit.name, loot_menu.radius, x, y))
 		return
 	end
+-- 	std_print(string.format("show %s (%d) %d, %d", unit.name, loot_menu.radius, x, y))
+	loot_menu.show = true
+-- 	wml.variables["show_loot_menu"] = true
 
 	local msgs_index = 1 +
 					   (nearby and 1 or 0) +
@@ -2639,7 +2715,7 @@ function update_loot_menu(x, y)
 
 	if nearby_items then
 		wml.variables.menu = {}
-		wml.variables.loot_radius = loot_radius
+		wml.variables.loot_radius = loot_menu.radius
 		wml.variables.nearby_items = nearby_items
 		wesnoth.fire_event("setup_loot_menu", {x, y})
 		-- Wesnoth 1.17?
@@ -2649,6 +2725,7 @@ end
 
 if wesnoth.current_version() < wesnoth.version(1, 17, 22) then
 	wesnoth.game_events.on_mouse_move = function(x, y)
+-- 		std_print(dump_lua_value({x = x, y = y}, "on_mouse_move"))
 		update_loot_menu(x, y)
 	end
 else
