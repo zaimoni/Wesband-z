@@ -1,5 +1,6 @@
 H = wesnoth.require "lua/helper.lua"
 W = H.set_wml_action_metatable {}
+T = wml.tag
 -- Define your global constants here.
 
 if wesnoth.current_version() < wesnoth.version(1, 16, 0) then
