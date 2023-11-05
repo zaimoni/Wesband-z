@@ -1,37 +1,62 @@
-function checkSafety(x, y)
+
+function checkSafety(x, y, radius, dist)
+	radius = radius or 8
+	dist = dist or 8
 	local rouse_list = wml.variables["rouse_list"]
 	local safety
+	local query, enemies, i
 	if rouse_list then
-		safety = not wesnoth.eval_conditional {
-			{ "have_unit", {
-				side = wml.variables['const.enemy_sides'],
-				{ "filter_location", { x = x, y = y, radius = 7 } },
-				{ "and", {
-					{ "not", {
-						{ "filter_wml", {
-							{ "status", { guardian = "yes" } }
-						} }
-					} },
-					{ "or", {
-						id = rouse_list
-					} }
-				} }
-			} }
-		}
-	else
-		safety = not wesnoth.eval_conditional {
-			{ "have_unit", {
-				side = wml.variables['const.enemy_sides'],
-				{ "filter_location", { x = x, y = y, radius = 7 } },
+		query = {
+			side = wml.variables['const.enemy_sides'],
+			{ "filter_location", { x = x, y = y, radius = radius } },
+			{ "and", {
 				{ "not", {
 					{ "filter_wml", {
 						{ "status", { guardian = "yes" } }
 					} }
+				} },
+				{ "or", {
+					id = rouse_list
+				} }
+			} }
+		}
+	else
+		query = {
+			side = wml.variables['const.enemy_sides'],
+			{ "filter_location", { x = x, y = y, radius = radius } },
+			{ "not", {
+				{ "filter_wml", {
+					{ "status", { guardian = "yes" } }
 				} }
 			} }
 		}
 	end
-	return safety
+	enemies = wesnoth.units.find_on_map(query)
+	if not enemies or #enemies == 0 then
+		return true
+	end
+
+	for i = 1, #enemies do
+		local e = enemies[i]
+		local path1, p1 = wesnoth.paths.find_path(e.x, e.y, x, y, { ignore_units = true, ignore_visibility = true })
+		local path2, p2 = wesnoth.paths.find_path(x, y, e.x, e.y, { ignore_units = true, ignore_visibility = true })
+		std_print(dump_lua_value({e = e.id, p1=p1, p2=p2}))
+		local hidden = e.status.hidden
+		local demeanor = e.variables.demeanor or "lookout"
+		if p1 <= dist or p2 <= dist then
+			if hidden and demeanor == "ambush" then
+				-- TODO trigger ambush
+				if p1 <= 2 or p2 <= 2 then
+					return false
+				end
+			else
+				std_print("unsafe triggered!")
+				return false
+			end
+		end
+	end
+
+	return true
 end
 
 local function on_board_path(u, x, y)
