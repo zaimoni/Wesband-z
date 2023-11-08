@@ -2431,7 +2431,8 @@ local function constructUnit(var, unstore)
 					} }
 				} })
 			end
-			if (get_n(weapon, "special_type.vine_slows") > 0 and get_n(unit, "abilities.vine_slows") > 0) or ((not player) and attack.user_name == "kusarigama" and attack.range == "ranged" and get_n(unit, "abilities.kusarigama_slows") > 0 or get_n(weapon, "enchantments.slows") > 0) then
+			if (get_n(weapon, "special_type.vine_slows") > 0 and get_n(unit, "variables.abilities.vine_slows") > 0) or
+			   ((not player) and attack.user_name == "kusarigama" and attack.range == "ranged" and get_n(unit, "variables.abilities.kusarigama_slows") > 0) or get_n(weapon, "enchantments.slows") > 0 then
 				table.insert(specials, { "slow", {
 					id = "slow",
 					name = "slows",
