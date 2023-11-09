@@ -1022,6 +1022,123 @@ weapon_data = {
 		"faerie_magic_adjust",
 		"runic_magic_adjust",
 		"spirit_magic_adjust"
+	},
+
+	attributes = {
+		rusty = {
+			damage		 = 0.7,
+			ench		 = 0.25,
+		},
+		unbalanced = {
+			damage		 = 0.8,
+			number		 = -1,
+			evade_adjust = -1,
+			ench		 = 0.375,
+		},
+		heavy = {
+			damage		 = 1.7,
+			number		 = -1,
+			evade_adjust = -1,
+			ench		 = 1.02,
+		},
+		light = {
+			damage		 = 0.5,
+			number		 = 1,
+			evade_adjust = 1,
+			ench		 = 1.02,
+		},
+		sharp = {
+			damage		 = 1.3,
+			ench		 = 1.0625,
+		},
+		balanced = {
+			damage		 = 0.8,
+			number		 = 1,
+			evade_adjust = 1,
+			ench		 = 1.0625,
+		},
+		none = {}
+	},
+
+	ench = {
+		arcane = {
+			adj  = _"mystic,arcane",
+			ego  = _"of arcane power",
+			add  = 250,
+			mult = 1.25,
+		},
+		cold = {
+			adj  = _"frozen,frosted,chilling",
+			ego  = _"of frost",
+			add  = 250,
+			mult = 1
+		},
+		fire = {
+			adj  = _"firey,burning",
+			ego  = _"of fire",
+			add  = 250,
+			mult = 1
+		},
+		chance_to_hit = {
+			attr = _"seeker,training",
+			ego  = _"of accuracy",
+			add  = 5,
+			mult = 1/12
+		},
+		firststrike = {
+			attr = _"vigilant,twitching,eager",
+			ego  = _"of firststrike",
+			add  = 200,
+			mult = 0.5
+		},
+		poison = {
+			attr = _"venonous",
+			ego  = nil,
+			add  = 250,
+			mult = 0.5
+		},
+		slow = {
+			attr = _"entangling,ensnaring",
+			ego  = nil,
+			add  = 750,
+			mult = 1,
+		},
+		magical = {
+			attr = _"magical",
+			ego  = nil,
+			add  = 575,
+			mult = 0.5
+		},
+		drains = {
+			attr = _"ravenous,hungry,vampyric",
+			ego  = _"of draining",
+			add  = 500,
+			mult = 1.75
+		},
+		damage = {
+			attr = nil,
+			ego  = _"of pain",
+			add  = 7.5,
+			mult = 1/32,
+		},
+		number = {
+			attr = nil,
+			ego  = nil,
+			add  = 125,
+			mult = 1/8,
+		},
+		evade_adjust = {
+			attr = nil,
+			ego  = _"of lithe",
+			add  = 750,
+			mult = 0.25,
+		},
+		magic_adjust = {
+			attr = _"enchanted",
+			ego  = nil,
+			add  = 150,
+			mult = 1/24,
+		}
 	}
 }
 
@@ -1031,6 +1148,74 @@ magic_types = {
 	"faerie",
 	"runic",
 	"spirit"
+}
+
+armor_data = {
+	shield_attributes = {
+		thick = {
+			p_mult	= 1.25,
+			r_mult	= 1.25,
+			ench	= 1.02,
+		},
+		light = {
+			p_mult	= 0.8,
+			r_mult	= 0.8,
+			ench	= 1.02,
+		},
+		polished = {
+			p_mult	= 0.8,
+			ench	= 1.0625,
+		},
+		rusty = {
+			p_mult	= 1.25,
+			ench	= 0.375,
+		},
+		new = {
+			r_mult	= 1.25,
+			ench	= 1.03125,
+		},
+		battered = {
+			r_mult	= 0.8,
+			ench	= 0.75,
+		},
+		none = {
+		}
+	},
+
+	attributes = {
+		thick = {
+			p_mult	= 1.25,
+			d_mult	= 1.2,
+			r_mult	= 1.2,
+			ench	= 1.02,
+		},
+		light = {
+			p_mult	= 0.75,
+			d_mult	= 0.8,
+			r_mult	= 0.8,
+			ench	= 1.02,
+		},
+		polished = {
+			p_mult	= 0.6,
+			d_mult	= 0.6,
+			ench	= 1.0625,
+		},
+		rusty = {
+			p_mult	= 1.5,
+			d_mult	= 1.3,
+			ench	= 0.375,
+		},
+		new = {
+			r_mult	= 1.2,
+			ench	= 1.03125,
+		},
+		battered = {
+			r_mult	= 0.8,
+			ench	= 0.75,
+		},
+		none = {
+		}
+	}
 }
 
 function dump_weapon_table()
@@ -1063,6 +1248,26 @@ function dump_weapon_table()
 		end
 		std_print(s)
 	end
+end
+
+function enchantItem(item, level)
+	wml.variables["item_temp"] = item
+	wml.variables["menu"] = nil
+	wml.variables["menu.enchant.level"] = level
+	wml.variables["menu.item_path"] = "item_temp"
+	wml.variables["current_unit"] = nil
+	if wesnoth.current_version() < wesnoth.version(1, 17, 0) then
+		wesnoth.fire_event("wbd enchant weapon")
+	else
+		wesnoth.game_events.fire("wbd enchant weapon")
+	end
+-- 	std_print(dump_wml_value(item, "item_before"))
+	item = wml.variables["item_temp"]
+	std_print(dump_lua_value({
+		item = item,
+-- 		stats = item.enchantments.stats,
+	}, "item_after"))
+	return item
 end
 
 local function lappend(l, st)
@@ -1246,7 +1451,8 @@ local function createWeapon(wtype, level, attr, var)
 		W.clear_variable { name = "r_temp" }
 	end
 
-	local rank = math.floor(level * 5 / 12)
+	local ench_chance = math.random(1000) + level * 2
+	local rank = level * 5 / 12
 
 	local function adjustCoreStats(wt)
 		if wt.range == "melee" then
@@ -1264,45 +1470,31 @@ local function createWeapon(wtype, level, attr, var)
 		end
 
 		if wt.number == 0 then
-			wt.damage = wt.damage + 2 * rank
+			wt.damage = round(wt.damage + 2 * rank)
 		elseif wt.number == 1 then
-			wt.damage = wt.damage + rank
+			wt.damage = wt.damage + round(rank)
 		else
-			local n = math.floor(rank / 4)
-			wt.number = wt.number + n
-			wt.damage = wt.damage + rank - n
+			wt.number = round(wt.number + rank * 0.25)
+			wt.damage = round(wt.damage + rank * 0.75)
 		end
 
-		if attr == "rusty" then
-			wt.damage = math.floor(wt.damage * 0.7 + 0.5)
-		elseif attr == "unbalanced" then
-			if wt.evade_adjust then
-				wt.evade_adjust = wt.evade_adjust - 1
-			end
-			wt.damage = math.floor(wt.damage * 0.8 + 0.5)
-			wt.number = math.max(1, wt.number - 1)
-		elseif attr == "heavy" then
-			if wt.evade_adjust then
-				wt.evade_adjust = wt.evade_adjust - 1
-			end
-			wt.damage = math.floor(wt.damage * 1.7 + 0.5)
-			wt.number = math.max(1, wt.number - 1)
-		elseif attr == "light" then
-			if wt.evade_adjust then
-				wt.evade_adjust = math.min(0, wt.evade_adjust + 1)
-			end
-			wt.damage = math.floor(wt.damage * 0.5 + 0.5)
-			wt.number = wt.number + 1
-		elseif attr == "sharp" then
-			wt.damage = math.floor(wt.damage * 1.3 + 0.5)
-		elseif attr == "balanced" then
-			if wt.evade_adjust then
-				wt.evade_adjust = math.min(0, wt.evade_adjust + 1)
-			end
-			wt.damage = math.floor(wt.damage * 0.8 + 0.5)
-			wt.number = wt.number + 1
-		elseif attr ~= "none" then
-			H.wml_error(string.format("invalid attribute= key in [create_weapon]: %s", attr))
+		local attr_mods = weapon_data.attributes[attr]
+		if not attr_mods then
+			werr(string.format("invalid attribute= key in [create_weapon]: %s", attr))
+		end
+
+		-- Apply attribute modifiers
+		if attr_mods.damage then
+			wt.damage = round(wt.damage * attr_mods.damage)
+		end
+		if attr_mods.number then
+			wt.number = wt.number + attr_mods.number
+		end
+		if attr_mods.evade_adjust and wt.evade_adjust then
+			wt.evade_adjust = wt.evade_adjust + attr_mods.evade_adjust
+		end
+		if attr_mods.ench then
+			ench_chance = ench_chance * attr_mods.ench
 		end
 
 		wt.body_damage_rate = wt.body_damage_rate or 0
@@ -1343,6 +1535,14 @@ local function createWeapon(wtype, level, attr, var)
 			wt[#wt][2].body = wt.damage
 		end
 
+		-- If we get over 995, then the weapon is enchanted
+		if ench_chance >= 995 then
+			local power = 1.0 + (ench_chance - 995) * level / 95
+-- 			local power = 1.0 + (ench_chance - 195) / 3 * level / 95
+			std_print(string.format("ench power = %f", power))
+			wt = enchantItem(wt, round(power))
+		end
+
 		return wt
 	end
 
@@ -1355,7 +1555,7 @@ local function createWeapon(wtype, level, attr, var)
 		wt.runic_magic_adjust	= wt.runic_magic_adjust or 0
 		wt.spirit_magic_adjust	= wt.spirit_magic_adjust or 0
 		wt.absolute_value 		= wt.absolute_value or 0
-		wt.rank					= rank
+		wt.rank					= round(rank)
 		wt.level				= level
 		wt.number				= wt.number or 1
 
@@ -1440,6 +1640,41 @@ local function createWeapon(wtype, level, attr, var)
 			cm = cm * 1.25
 		end
 		wt.absolute_value = math.max(2, math.floor(cm * bc * (bc + 1) + 3.75 * (wt.evade_adjust or 0) + wt.absolute_value + 0.5))
+		local k, v
+		local ench, ench_stats
+		for k, v in ipairs(wt) do
+			if type(v) == "table" and type(v[1]) == "string" and v[1] == "enchantments" then
+				ench = v[2]
+				break
+			end
+		end
+
+		if ench then
+-- 			std_print("found [enchantments]")
+			for k, v in ipairs(ench) do
+				if type(v) == "table" and type(v[1]) == "string" and v[1] == "stats" then
+					ench_stats = v[2]
+					break
+				end
+			end
+		end
+
+		if ench_stats then
+-- 			std_print("found [enchantments][stats]")
+			local mult = 1
+			local k, v
+			for k, v in pairs(weapon_data.ench) do
+				if ench_stats[k] then
+					wt.absolute_value = wt.absolute_value + v.add * ench_stats[k] * (1 + level / 15)
+					mult = mult + v.mult * ench_stats[k]
+				end
+			end
+
+			wt.absolute_value = round(wt.absolute_value * mult)
+-- 			std_print("Enchanted pricing: " .. mult)
+		else
+-- 			·std_print("NO ENCHANTMENTS " .. tostring(wt.name))
+		end
 
 		wt.description = adjustName(wt.description)
 		return adjustWeaponDescription(wt)
@@ -1487,11 +1722,11 @@ end
 
 function wesnoth.wml_actions.create_weapon(args)
 	local wtype = string.match(args.type, "[^%s]+") or H.wml_error("[create_weapon] requires a type= key")
-	local rank = args.rank or 0
+	local level = args.rank or 0
 	local attr = string.match(args.attribute or "none", "[^%s]+")
 	local var = string.match(args.variable, "[^%s]+") or H.wml_error("[create_weapon] requires a variable= key")
 
-	createWeapon(wtype, rank, attr, var)
+	createWeapon(wtype, level, attr, var)
 end
 
 local function createArmor(atype, rank, attr, var)
@@ -1500,6 +1735,11 @@ local function createArmor(atype, rank, attr, var)
 		attr = wml.variables['r_temp']
 		W.clear_variable { name = "r_temp" }
 	end
+
+-- 	if ench_chance >= 995 then
+-- 		local power = 1 + (ench_chance - 995) * level / 75
+-- 		std_print(string.format("ench power = %d", power))
+-- 	end
 
 	local rank_frac =  rank * 0.1 + 1
 
