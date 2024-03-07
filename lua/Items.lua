@@ -1454,6 +1454,26 @@ local function createWeapon(wtype, level, attr, var)
 	local ench_chance = math.random(1000) + level * 2
 	local rank = level * 5 / 12
 
+	local function addMagicAdjust(school, wt)
+		local amount = wt[school]
+		if amount then
+			local rank_frac = 1 + level * 0.1
+
+			local aa
+			if attr == "rusty" then
+				aa = math.floor(rank_frac * amount * 0.7 + 0.5)
+			elseif attr == "sharp" then
+				aa = math.floor(rank_frac * amount * 1.3 + 0.5)
+			else
+				aa = math.floor(rank_frac * amount + 0.5)
+			end
+
+			wt[school] = aa
+			wt.absolute_value = wt.absolute_value + 2.5 * aa
+		end
+		return wt
+	end
+
 	local function adjustCoreStats(wt)
 		if wt.range == "melee" then
 			wt.category = "melee_weapon"
@@ -1534,6 +1554,13 @@ local function createWeapon(wtype, level, attr, var)
 		elseif not (wt.class == "crossbow" or wt.class == "thunderstick") then
 			wt[#wt][2].body = wt.damage
 		end
+
+		-- backfill vghetto adjust magic power here
+		addMagicAdjust("human_magic_adjust", wt)
+		addMagicAdjust("dark_magic_adjust", wt)
+		addMagicAdjust("faerie_magic_adjust", wt)
+		addMagicAdjust("runic_magic_adjust", wt)
+		addMagicAdjust("spirit_magic_adjust", wt)
 
 		-- If we get over 995, then the weapon is enchanted
 		if ench_chance >= 995 then
@@ -1678,21 +1705,6 @@ local function createWeapon(wtype, level, attr, var)
 
 		wt.description = adjustName(wt.description)
 		return adjustWeaponDescription(wt)
-	end
-
-	local function addMagicAdjust(school, amount, wt)
-		local rank_frac = 1 + level * 0.1
-		local aa
-		if attr == "rusty" then
-			aa = math.floor(rank_frac * amount * 0.7 + 0.5)
-		elseif attr == "sharp" then
-			aa = math.floor(rank_frac * amount * 1.3 + 0.5)
-		else
-			aa = math.floor(rank_frac * amount + 0.5)
-		end
-		wt[school] = wt[school] + aa
-		wt.absolute_value = wt.absolute_value + 2.5 * aa
-		return wt
 	end
 
 	-- NOTE: This isn't a true "arch-type" until we distill our weapons table and utilize proper
