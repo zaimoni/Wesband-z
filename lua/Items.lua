@@ -1567,7 +1567,7 @@ local function createWeapon(wtype, level, attr, var)
 			local power = 1.0 + (ench_chance - 995) * level / 95
 -- 			local power = 1.0 + (ench_chance - 195) / 3 * level / 95
 			std_print(string.format("ench power = %f", power))
-			wt = enchantItem(wt, round(power))
+			wt = enchantItem(wt, mathx.round(power))
 		end
 
 		return wt
