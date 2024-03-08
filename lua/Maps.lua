@@ -11,10 +11,10 @@ function wesnoth.wml_actions.generate_dungeon_level(cfg)
 	end
 	wml.variables["current_dungeon_template.x"] = width
 	wml.variables["current_dungeon_template.y"] = height
-	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonUpdate.lua")
-	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonArchitecture.lua")
-	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonThemes.lua")
-	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonTerrain.lua")
+	wesnoth.dofile("./lua/DungeonUpdate.lua")
+	wesnoth.dofile("./lua/DungeonArchitecture.lua")
+	wesnoth.dofile("./lua/DungeonThemes.lua")
+	wesnoth.dofile("./lua/DungeonTerrain.lua")
 end
 
 function wesnoth.wml_actions.restore_map(cfg)
