@@ -702,11 +702,11 @@ function get_attack_basics_light(unit, weapon)
 	end
 	if res.user_name == "hammer" and var_abilities and nchild(var_abilities, "devling_spiker") > 0 then
 		res.description = "nail 'em"
-		res.damage = math.round(res.damage * res.number)
+		res.damage = mathx.round(res.damage * res.number)
 		res.number = 1
 	end
 	if res.user_name == "spike 'em" then
-		res.damage = math.round(res.damage * res.number * 1.25)
+		res.damage = mathx.round(res.damage * res.number * 1.25)
 		res.number = 1
 	end
 	return res, weapon.class

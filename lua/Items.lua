@@ -1490,12 +1490,12 @@ local function createWeapon(wtype, level, attr, var)
 		end
 
 		if wt.number == 0 then
-			wt.damage = round(wt.damage + 2 * rank)
+			wt.damage = mathx.round(wt.damage + 2 * rank)
 		elseif wt.number == 1 then
-			wt.damage = wt.damage + round(rank)
+			wt.damage = wt.damage + mathx.round(rank)
 		else
-			wt.number = round(wt.number + rank * 0.25)
-			wt.damage = round(wt.damage + rank * 0.75)
+			wt.number = mathx.round(wt.number + rank * 0.25)
+			wt.damage = mathx.round(wt.damage + rank * 0.75)
 		end
 
 		local attr_mods = weapon_data.attributes[attr]
@@ -1505,7 +1505,7 @@ local function createWeapon(wtype, level, attr, var)
 
 		-- Apply attribute modifiers
 		if attr_mods.damage then
-			wt.damage = round(wt.damage * attr_mods.damage)
+			wt.damage = mathx.round(wt.damage * attr_mods.damage)
 		end
 		if attr_mods.number then
 			wt.number = wt.number + attr_mods.number
@@ -1582,7 +1582,7 @@ local function createWeapon(wtype, level, attr, var)
 		wt.runic_magic_adjust	= wt.runic_magic_adjust or 0
 		wt.spirit_magic_adjust	= wt.spirit_magic_adjust or 0
 		wt.absolute_value 		= wt.absolute_value or 0
-		wt.rank					= round(rank)
+		wt.rank					= mathx.round(rank)
 		wt.level				= level
 		wt.number				= wt.number or 1
 
@@ -1697,7 +1697,7 @@ local function createWeapon(wtype, level, attr, var)
 				end
 			end
 
-			wt.absolute_value = round(wt.absolute_value * mult)
+			wt.absolute_value = mathx.round(wt.absolute_value * mult)
 -- 			std_print("Enchanted pricing: " .. mult)
 		else
 -- 			·std_print("NO ENCHANTMENTS " .. tostring(wt.name))
