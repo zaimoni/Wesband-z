@@ -1582,7 +1582,7 @@ local function createWeapon(wtype, level, attr, var)
 		wt.runic_magic_adjust	= wt.runic_magic_adjust or 0
 		wt.spirit_magic_adjust	= wt.spirit_magic_adjust or 0
 		wt.absolute_value 		= wt.absolute_value or 0
-		wt.rank					= round(rank)
+--		wt.rank					= round(rank) -- 2024-03-08: unclear why this is erroring after big bang disconnection from Wesband filesystem
 		wt.level				= level
 		wt.number				= wt.number or 1
 
