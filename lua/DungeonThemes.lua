@@ -131,7 +131,7 @@ if wml.variables['dungeon_creation.temp.creep_themes[0].theme'] == "water" then
 elseif wml.variables['dungeon_creation.temp.creep_themes[1].theme'] == "water" then
 	wml.variables['dungeon_creation.temp.water_theme_position'] = 1
 else
-	W.clear_variable { name = "terrain_match" }
+	wml.variables['terrain_match'] = nil
 	W.store_locations {
 			terrain = "Ai",
 			variable = "terrain_match"
@@ -144,7 +144,7 @@ else
 			item = "water",
 			op = "clear"
 		})
-		W.clear_variable { name = "terrain_match" }
+		wml.variables['terrain_match'] = nil
 	end
 end
 for i = 2, wml.variables['const.max_enemy_count'] - 1 do

@@ -30,7 +30,7 @@ local function process_entries(tname)
 				end
 			end
 			if tcount == 0 then
-				W.clear_variable { name = string.format("dungeon_creation.updates.%s[%i]", tname, i) }
+				wml.variables[string.format("dungeon_creation.updates.%s[%i]", tname, i)] = nil
 			end
 		end
 	end

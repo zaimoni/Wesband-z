@@ -1448,7 +1448,7 @@ local function createWeapon(wtype, level, attr, var)
 	if attr == "random" then
 		W.set_variable { name = "r_temp", rand = "rusty,unbalanced,none,none,none,none,none,none,heavy,sharp,light,balanced" }
 		attr = wml.variables['r_temp']
-		W.clear_variable { name = "r_temp" }
+		wml.variables['r_temp'] = nil
 	end
 
 	local ench_chance = math.random(1000) + level * 2
@@ -1745,7 +1745,7 @@ local function createArmor(atype, rank, attr, var)
 	if attr == "random" then
 		W.set_variable { name = "r_temp", rand = "thick,light,polished,rusty,new,battered,none,none,none,none,none,none" }
 		attr = wml.variables['r_temp']
-		W.clear_variable { name = "r_temp" }
+		wml.variables['r_temp'] = nil
 	end
 
 -- 	if ench_chance >= 995 then
@@ -1862,7 +1862,7 @@ local function createArmor(atype, rank, attr, var)
 			else
 				r_mult = r_mult * rank_frac
 			end
-			W.clear_variable { name = "r_temp" }
+			wml.variables['r_temp'] = nil
 
 			if not rt.arcane then
 				rt.arcane = 0
