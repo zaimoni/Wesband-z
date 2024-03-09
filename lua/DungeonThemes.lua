@@ -161,71 +161,39 @@ end
  wml.variables['dungeon_creation.temp.water_theme_position'] =  wml.variables['dungeon_creation.temp.water_theme_position'] + 1 +  wml.variables['const.max_player_count']
 for i = 0,  wml.variables['const.max_enemy_count'] - 1 do
 	wml.variables[string.format("dungeon_creation.active_themes[%i].theme", i)] = wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)]
+	local target_side = wesnoth.sides.get(i + 1 +  wml.variables['const.max_player_count'])
 	if  wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "water" then
-		W.modify_side {
-				side = i + 1 +  wml.variables['const.max_player_count'],
-				team_name =  wml.variables['dungeon_creation.alliances.water'],
-				user_team_name = _ "Water Dwellers"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.water']
+		target_side.user_team_name = _ "Water Dwellers"
 	elseif  wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "orcs" then
-		W.modify_side {
-				side = i + 1 +  wml.variables['const.max_player_count'],
-				team_name =  wml.variables['dungeon_creation.alliances.orcs'],
-				user_team_name = _ "Orcish Tribes"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.orcs']
+		target_side.user_team_name = _ "Orcish Tribes"
 	elseif  wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "outlaws" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.outlaws'],
-				user_team_name = _ "Outlaw Band"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.outlaws']
+		target_side.user_team_name = _ "Outlaw Band"
 	elseif wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "undead" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.undead'],
-				user_team_name = _ "Undead Hordes"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.undead']
+		target_side.user_team_name = _ "Undead Hordes"
 	elseif wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "planar" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.planar'],
-				user_team_name = _ "Planar Beings"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.planar']
+		target_side.user_team_name = _ "Planar Beings"
 	elseif wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "cave" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.cave'],
-				user_team_name = _ "Cavern Dwellers"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.cave']
+		target_side.user_team_name = _ "Cavern Dwellers"
 	elseif wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "dark" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.dark'],
-				user_team_name = _ "Dwellers in Darkness"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.dark']
+		target_side.user_team_name = _ "Dwellers in Darkness"
 	elseif wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "slime" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.slime'],
-				user_team_name = _ "Creeping Ooze"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.slime']
+		target_side.user_team_name = _ "Creeping Ooze"
 	elseif wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "naga" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.naga'],
-				user_team_name = _ "Naga Warriors"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.naga']
+		target_side.user_team_name = _ "Naga Warriors"
 	elseif wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(i)] == "saurian" then
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				team_name = wml.variables['dungeon_creation.alliances.saurian'],
-				user_team_name = _ "Saurian Tribes"
-			}
+		target_side.team_name = wml.variables['dungeon_creation.alliances.saurian']
+		target_side.user_team_name = _ "Saurian Tribes"
 	else
-		W.modify_side {
-				side = i + 1 + wml.variables['const.max_player_count'],
-				user_team_name = _ "None"
-			}
+		target_side.user_team_name = _ "None"
 	end
 end
 if wml.variables['dungeon_creation.temp.loner_themes.total_weight'] > 0 and wml.variables['dungeon_creation.temp.prob_list.total_weight'] > 0 then
