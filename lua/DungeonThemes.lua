@@ -121,10 +121,10 @@ elseif wml.variables['dungeon_creation.temp.creep_themes[1].theme'] == "water" t
 	wml.variables['dungeon_creation.temp.water_theme_position'] = 1
 else
 	wml.variables['terrain_match'] = nil
-	W.store_locations {
+	wml.fire("store_locations", {
 			terrain = "Ai",
 			variable = "terrain_match"
-		}
+		})
 	if wml.variables['dungeon_creation.temp.terrain_variation'] == "Wwf" or (wml.variables['dungeon_creation.temp.flow_flavor'] == "" and wml.variables['dungeon_creation.temp.flow_type'] < 11) or wml.variables['terrain_match'] then
 		wml.variables['dungeon_creation.temp.water_theme_position'] = mathx.random_choice(string.format("2..%d", wml.variables['const.max_enemy_count'] -1))
 		wesnoth.wml_actions.set_prob({

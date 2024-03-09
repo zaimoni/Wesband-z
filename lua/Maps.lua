@@ -108,17 +108,17 @@ function wesnoth.wml_actions.create_exit(cfg)
 	wml.variables[string.format("ground.x%d.y%d.exit.destination", x, y)] = dest
 	wml.variables[string.format("ground.x%d.y%d.exit.image", x, y)] = image
 	wml.variables[string.format("ground.x%d.y%d.exit.label", x, y)] = label
-	W.item {
+	wml.fire("item", {
 		x = x,
 		y = y,
 		image = image,
 		visible_in_fog = "yes"
-	}
-	W.label {
+	})
+	wml.fire("label", {
 		x = x,
 		y = y,
 		text = label,
 		visible_in_fog = "yes",
 		immutable = "yes"
-	}
+	})
 end

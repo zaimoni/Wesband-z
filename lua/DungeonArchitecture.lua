@@ -222,4 +222,4 @@ for i = 1, #rooms do
 	place_random_chamber(rooms[i].x, rooms[i].y)
 end
 
-W.store_locations { terrain = "Re", variable = "chamber_terrain.hexes" }
+wml.fire("store_locations", { terrain = "Re", variable = "chamber_terrain.hexes" })

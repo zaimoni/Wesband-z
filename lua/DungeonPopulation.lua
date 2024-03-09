@@ -41,7 +41,7 @@ local function get_active_area(a_type)
 		else
 			table.insert(loc_table, { "not", { { "filter", {} } } })
 		end
-		W.store_locations(loc_table)
+		wml.fire("store_locations", loc_table)
 		local filled = false
 		if wml.variables["dungeon_creation.temp.active_area"] then
 			filled = true

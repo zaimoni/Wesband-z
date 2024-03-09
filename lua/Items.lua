@@ -2354,11 +2354,11 @@ function wesnoth.wml_actions.drop_item(cfg)
 				if wml.variables[string.format("ground.x%d.y%d.items[%d].category", x, y, j)] == "gold" then
 					local old_image = wml.variables[string.format("ground.x%d.y%d.items[%d].ground_icon", x, y, j)]
 					item_data.amount = item_data.amount + wml.variables[string.format("ground.x%d.y%d.items[%d].amount", x, y, j)]
-					W.remove_item {
+					wml.fire("remove_item", {
 						x = x,
 						y = y,
 						image = string.format("items/%s.png", old_image)
-					}
+					})
 					wml.variables[string.format("ground.x%d.y%d.items[%d]", x, y, j)] = nil
 					break
 				end
@@ -2377,12 +2377,12 @@ function wesnoth.wml_actions.drop_item(cfg)
 		end
 		end
 		if item_data.ground_icon then
-			W.item {
+			wml.fire("item", {
 				x = x,
 				y = y,
 				image = string.format("items/%s.png", item_data.ground_icon),
 				visible_in_fog = "no"
-			}
+			})
 			wml.variables[string.format("ground.x%d.y%d.items[%d]", x, y, i)] = item_data
 		end
 	end
@@ -2402,29 +2402,29 @@ function wesnoth.wml_actions.item_cleanup(cfg)
 	else
 		wml.variables[string.format("ground.x%d.y%d.items[%d]", x, y, ix)] = nil
 	end
-	W.remove_item {
+	wml.fire("remove_item", {
 		x = x,
 		y = y
-	}
+	})
 	local e = wml.variables[string.format("ground.x%d.y%d.exit.image", x, y)]
 	if e then
-		W.item {
+		wml.fire("item", {
 			x = x,
 			y = y,
 			image = e,
 			visible_in_fog = "yes"
-		}
+		})
 	end
 	local g = wml.variables[string.format("ground.x%d.y%d", x, y)]
 	if g and g[1] then
 		for i = 1, #g do
 			if g[i][1] == "items" and g[i][2].ground_icon then
-				W.item {
+				wml.fire("item", {
 					x = x,
 					y = y,
 					image = string.format("items/%s.png", g[i][2].ground_icon),
 					visible_in_fog = "no"
-				}
+				})
 			end
 		end
 	else
