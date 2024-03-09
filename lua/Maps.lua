@@ -4,17 +4,17 @@ function wesnoth.wml_actions.generate_dungeon_level(cfg)
 	local w, h = wesnoth.get_map_size()
 	if width ~= w or height ~= h then
 		W.replace_map {
-			map = wesnoth.dofile(string.format("maps/dungeon_template_%dx%d.lua", width, height)),
+			map = wesnoth.dofile(string.format("~add-ons/Wesband-z/maps/dungeon_template_%dx%d.lua", width, height)),
 			expand = "yes",
 			shrink = "yes"
 		}
 	end
 	wml.variables["current_dungeon_template.x"] = width
 	wml.variables["current_dungeon_template.y"] = height
-	wesnoth.dofile("./lua/DungeonUpdate.lua")
-	wesnoth.dofile("./lua/DungeonArchitecture.lua")
-	wesnoth.dofile("./lua/DungeonThemes.lua")
-	wesnoth.dofile("./lua/DungeonTerrain.lua")
+	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonUpdate.lua")
+	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonArchitecture.lua")
+	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonThemes.lua")
+	wesnoth.dofile("~add-ons/Wesband-z/lua/DungeonTerrain.lua")
 end
 
 function wesnoth.wml_actions.restore_map(cfg)
