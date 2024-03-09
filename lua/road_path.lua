@@ -1,4 +1,3 @@
-local helper = wesnoth.require "lua/helper.lua"
 local LS = wesnoth.require "location_set"
 
 local function on_board(x, y)
@@ -37,17 +36,16 @@ local function place_road(to_x, to_y, from_x, from_y, road_ops)
 				wesnoth.set_terrain(to_x, to_y, bridges[3], 'both', false)
 			end
 		elseif tile_op.convert_to then
-			local tile = helper.rand(tile_op.convert_to)
-			wesnoth.set_terrain(to_x, to_y, tile, 'both', false)
+			wesnoth.set_terrain(to_x, to_y, mathx.random_choice(tile_op.convert_to), 'both', false)
 		end
 	end
 end
 
 function wesnoth.wml_actions.road_path(cfg)
-	local from_x = tonumber(cfg.from_x) or helper.wml_error("[road_path] expects a from_x= attribute.")
-	local from_y = tonumber(cfg.from_y) or helper.wml_error("[road_path] expects a from_y= attribute.")
-	local to_x = tonumber(cfg.to_x) or helper.wml_error("[road_path] expects a to_x= attribute.")
-	local to_y = tonumber(cfg.to_y) or helper.wml_error("[road_path] expects a to_y= attribute.")
+	local from_x = tonumber(cfg.from_x) or werr("[road_path] expects a from_x= attribute.")
+	local from_y = tonumber(cfg.from_y) or werr("[road_path] expects a from_y= attribute.")
+	local to_x = tonumber(cfg.to_x) or werr("[road_path] expects a to_x= attribute.")
+	local to_y = tonumber(cfg.to_y) or werr("[road_path] expects a to_y= attribute.")
 	if not on_board(from_x, from_y) then
 		return
 	end
