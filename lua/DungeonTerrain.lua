@@ -111,7 +111,7 @@ else
 	mapData = wesnoth.dofile("~add-ons/Wesband-z/masks/cross_none.lua")
 end
 
-W.terrain_mask {
+wml.fire("terrain_mask", {
 	x = 1,
 	y = 1,
 	mask = mapData,
@@ -120,4 +120,4 @@ W.terrain_mask {
 	{"rule", { old = "Re,Aa", new = "Re,Ai", terrain = wml.variables['dungeon_creation.temp.terrain_variation'] } },
 	{"rule", { old = "Xu", new = "Re", terrain = wml.variables['dungeon_creation.temp.wall_flavor'] } },
 	{"rule", { use_old = "yes" } }
-}
+})

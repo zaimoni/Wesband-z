@@ -4,29 +4,29 @@ mask_table.nw_se_hall = wesnoth.dofile("~add-ons/Wesband-z/masks/nw_se_hall.lua"
 
 local function place_hall(x, y, dir)
 	if dir == "SW" then
-		W.terrain_mask {
+		wml.fire("terrain_mask", {
 			x = x - 11,
 			y = y - 1 - x % 2,
 			mask = mask_table.ne_sw_hall
-		}
+		})
 	elseif dir == "NE" then
-		W.terrain_mask {
+		wml.fire("terrain_mask", {
 			x = x - 1,
 			y = y - 6 - x % 2,
 			mask = mask_table.ne_sw_hall
-		}
+		})
 	elseif dir == "SE" then
-		W.terrain_mask {
+		wml.fire("terrain_mask", {
 			x = x - 1,
 			y = y - 1 - x % 2,
 			mask = mask_table.nw_se_hall
-		}
+		})
 	else
-		W.terrain_mask {
+		wml.fire("terrain_mask", {
 			x = x - 11,
 			y = y - 6 - x % 2,
 			mask = mask_table.nw_se_hall
-		}
+		})
 	end
 end
 
@@ -105,16 +105,16 @@ local function place_random_chamber(x, y)
 	elseif wml.variables['r_temp'] == 34 then
 		mask_name = "diamond_large8_pool_center"
 	else
-		mask_name = mathx.random_choide("diamond_huge_columns,diamond_huge_columns2,diamond_huge_maze")
+		mask_name = mathx.random_choice("diamond_huge_columns,diamond_huge_columns2,diamond_huge_maze")
 	end
 	if not mask_table[mask_name] then
 		mask_table[mask_name] = wesnoth.dofile(string.format("~add-ons/Wesband-z/masks/%s.lua", mask_name))
 	end
-	W.terrain_mask {
+	wml.fire("terrain_mask", {
 		x = x,
 		y = y,
 		mask = mask_table[mask_name]
-	}
+	})
 end
 
 local function select_layout(edge_room_chance, extra_path_chance, stray_path_chance)
