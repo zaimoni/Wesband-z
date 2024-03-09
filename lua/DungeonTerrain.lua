@@ -33,8 +33,7 @@ end
 local trapdoor_data = {}
 local function select_trapdoor_location(dir)
 	local cthl = tonumber(wml.variables["chamber_terrain.hexes.length"]) or 0
-	--local loc_index = H.rand("0..$($chamber_terrain.hexes.length-1)")
-	local loc_index = tonumber(H.rand(string.format("0..%i",  cthl - 1)))
+	local loc_index = tonumber(mathx.random_choice(string.format("0..%i",  cthl - 1)))
 	trapdoor_data[dir] = wml.variables[string.format("chamber_terrain.hexes[%d]", loc_index)]
 end
 local function trapdoor_on_board(x, y)

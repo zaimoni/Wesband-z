@@ -1,5 +1,5 @@
 function wesnoth.wml_actions.generate_dungeon_level(cfg)
-	local width = H.rand("40,50,50,50,60")
+	local width = tonumber(mathx.random_choice("40,50,50,50,60"))
 	local height = 100 - width
 	local w, h = wesnoth.get_map_size()
 	if width ~= w or height ~= h then

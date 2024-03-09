@@ -1,6 +1,3 @@
-H = wesnoth.require "lua/helper.lua"
-W = H.set_wml_action_metatable {}
-T = wml.tag
 -- Define your global constants here.
 
 if wesnoth.current_version() < wesnoth.version(1, 16, 0) then
@@ -12,7 +9,6 @@ else
 		wml.error(msg)
 	end
 end
---H.set_wml_var_metatable(_G)
 
 function constipate(t)
     return setmetatable({}, {
@@ -149,17 +145,17 @@ function wesnoth.wml_actions.generate_shop_details(cfg)
 	local unit_type, shop_descriptors
 
 	if shop == "weapon" or shop == "armor" then
-		unit_type = H.rand("Master Bowman,Swordsman,Spearman,Sergeant,Pikeman,Longbowman,Javelineer,Heavy Infantryman,Bowman,Dwarvish Dragonguard,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Sentinel,Dwarvish Thunderer,Elvish Ranger,Elvish Marksman,Elvish Hero,Elvish Fighter,Elvish Captain,Elvish Archer")
+		unit_type = mathx.random_choice("Master Bowman,Swordsman,Spearman,Sergeant,Pikeman,Longbowman,Javelineer,Heavy Infantryman,Bowman,Dwarvish Dragonguard,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Sentinel,Dwarvish Thunderer,Elvish Ranger,Elvish Marksman,Elvish Hero,Elvish Fighter,Elvish Captain,Elvish Archer")
 		if shop == "weapon" then
 			shop_descriptors = "Arms,Blades"
 		else
 			shop_descriptors = "Armor,Vestments,Shields"
 		end
 	elseif shop == "magic" then
-		unit_type = H.rand("White Mage,Silver Mage,Red Mage,Mage of Light,Arch Mage,Elvish Shaman,Elvish Sorceress,Elvish Sylph,Dwarvish Runemaster")
+		unit_type = mathx.random_choice("White Mage,Silver Mage,Red Mage,Mage of Light,Arch Mage,Elvish Shaman,Elvish Sorceress,Elvish Sylph,Dwarvish Runemaster")
 		shop_descriptors = "Apothecary,Library,Magic Shoppe,Magical Supplies,Alchemy Store"
 	elseif shop == "tavern" then
-		unit_type = H.rand("Ruffian,Thug,Dwarvish Dragonguard,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Sentinel,Dwarvish Thunderer")
+		unit_type = mathx.random_choice("Ruffian,Thug,Dwarvish Dragonguard,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Sentinel,Dwarvish Thunderer")
 		shop_descriptors = "Tavern,Pub,Public House"
 	else
 		werr(string.format("[generate_name]: invalid shop attribute given: %s", shop))

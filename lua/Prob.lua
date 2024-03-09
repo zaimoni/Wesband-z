@@ -247,7 +247,7 @@ function wesnoth.wml_actions.get_prob(cfg)
 	if list.literal then
 		list = prob_list_eval(wml.tovconfig(list))
 	end
-	local val = H.rand("0.." .. tostring(list.total_weight))
+	local val = mathx.random_choice("0.." .. tostring(list.total_weight))
 	local i
 -- std_print(dump_lua_value(list, "list"))
 -- std_print(dump_lua_value({name=name, entries = entries}, "info"))

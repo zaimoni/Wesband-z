@@ -58,15 +58,14 @@ end
 
 local function get_mob_loc()
 	local dcaal = tonumber(wml.variables["dungeon_creation.temp.active_area.length"]) or 0
-	--local ix = H.rand("0..$($dungeon_creation.temp.active_area.length-1)")
-	local ix = tonumber(H.rand(string.format("0..%i", dcaal - 1)))
+	local ix = tonumber(mathx.random_choice(string.format("0..%i", dcaal - 1)))
 	local loc = wml.variables[string.format("dungeon_creation.temp.active_area[%d]", ix)]
 	wml.variables["dungeon_creation.temp.mob_x"] = loc.x
 	wml.variables["dungeon_creation.temp.mob_y"] = loc.y
 end
 
-local rnd_1 = H.rand("0..3")
-local rnd_2 = H.rand("0..10")
+local rnd_1 = mathx.random_choice("0..3")
+local rnd_2 = mathx.random_choice("0..10")
 if rnd_1 == 0 then
 	max_x_0, min_x_1 = max_x_1 / 2 + rnd_2 - 7, max_x_1 / 2 + rnd_2 - 2
 elseif rnd_1 == 1 then
@@ -84,7 +83,7 @@ if nominal_max < cluster_max + 3 then
 	nominal_min = nominal_min - 1
 end
 local function get_cluster_level()
-	local rnd = H.rand(string.format("%d..%d", nominal_min, nominal_max))
+	local rnd = mathx.random_choice(string.format("%d..%d", nominal_min, nominal_max))
 	if rnd < cluster_min then
 		rnd = cluster_min
 	elseif rnd > cluster_max then
@@ -96,20 +95,20 @@ end
 local boss_clusters, mini_clusters, loners, pool_loners
 local player_count = tonumber(wml.variables["const.active_players"]) or 0
 if player_count == 1 then
-	boss_clusters = tonumber(H.rand("1,1,2"))
-	mini_clusters = tonumber(H.rand("1,2,2"))
-	loners = H.rand("5..7")
-	pool_loners = tonumber(H.rand("0,1,1,1,2"))
+	boss_clusters = tonumber(mathx.random_choice("1,1,2"))
+	mini_clusters = tonumber(mathx.random_choice("1,2,2"))
+	loners = mathx.random_choice("5..7")
+	pool_loners = tonumber(mathx.random_choice("0,1,1,1,2"))
 elseif player_count == 2 then
-	boss_clusters = tonumber(H.rand("1,2,2"))
-	mini_clusters = tonumber(H.rand("2,3,3"))
-	loners = H.rand("6..9")
-	pool_loners = tonumber(H.rand("0,1,1,2,2"))
+	boss_clusters = tonumber(mathx.random_choice("1,2,2"))
+	mini_clusters = tonumber(mathx.random_choice("2,3,3"))
+	loners = mathx.random_choice("6..9")
+	pool_loners = tonumber(mathx.random_choice("0,1,1,2,2"))
 else
-	boss_clusters = tonumber(H.rand("2,3"))
-	mini_clusters = tonumber(H.rand("3,3,4"))
-	loners = H.rand("1..5") + 2 * player_count
-	pool_loners = tonumber(H.rand("0,1,2,2,3,3"))
+	boss_clusters = tonumber(mathx.random_choice("2,3"))
+	mini_clusters = tonumber(mathx.random_choice("3,3,4"))
+	loners = mathx.random_choice("1..5") + 2 * player_count
+	pool_loners = tonumber(mathx.random_choice("0,1,2,2,3,3"))
 end
 wml.variables["dungeon_creation.temp.cluster_id"] = 0
 local function advance_cluster()
@@ -133,7 +132,7 @@ end
 loners = loners + pool_loners
 
 while boss_clusters > 0 do
-	local theme_index = tonumber(H.rand("0,0,1"))
+	local theme_index = tonumber(mathx.random_choice("0,0,1"))
 	wml.variables["dungeon_creation.temp.mob_theme"] = wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(theme_index)]
 	wml.variables["dungeon_creation.temp.place_side"] = theme_index + first_enemy_position + 1
 	if theme_index == 0 then
@@ -145,14 +144,14 @@ while boss_clusters > 0 do
 	get_cluster_level()
 	wesnoth.fire_event("create_mob_boss")
 	local ap = tonumber(wml.variables["const.active_players"]) or 0
-	--local tough_count = H.rand(string.format("1..%d", H.rand("1..$const.active_players")))
-	local tough_count = tonumber(H.rand(string.format("1..%i", ap)))
+	--local tough_count = mathx.random_choice(string.format("1..%d", mathx.random_choice("1..$const.active_players")))
+	local tough_count = tonumber(mathx.random_choice(string.format("1..%i", ap)))
 	for i = 1, tough_count do
 		wesnoth.fire_event("create_mob_tough")
 	end
 	local ap2 = ap * 2
-	local mook_count = tonumber(H.rand(string.format("%i..%i", ap, ap2)))
-	--local mook_count = H.rand("$const.active_players..$(2*$const.active_players)")
+	local mook_count = tonumber(mathx.random_choice(string.format("%i..%i", ap, ap2)))
+	--local mook_count = mathx.random_choice("$const.active_players..$(2*$const.active_players)")
 	for i = 1, mook_count do
 		wesnoth.fire_event("create_mob_mook")
 	end
@@ -163,7 +162,7 @@ spacings.primary = math.min(spacings.primary, 3)
 spacings.secondary = math.min(spacings.secondary, 3)
 
 while mini_clusters > 0 do
-	local theme_index = tonumber(H.rand("0,1,1"))
+	local theme_index = tonumber(mathx.random_choice("0,1,1"))
 	wml.variables["dungeon_creation.temp.mob_theme"] = wml.variables[("dungeon_creation.temp.creep_themes[%d].theme"):format(theme_index)]
 	wml.variables["dungeon_creation.temp.place_side"] = theme_index + first_enemy_position + 1
 	if theme_index == 0 then
@@ -174,14 +173,14 @@ while mini_clusters > 0 do
 	get_mob_loc()
 	get_cluster_level()
 	local ap = tonumber(wml.variables["const.active_players"]) or 0
-	--local tough_count = H.rand(string.format("1..%d", H.rand("1..$const.active_players")))
-	local tough_count = tonumber(H.rand(string.format("1..%i", ap)))
+	--local tough_count = mathx.random_choice(string.format("1..%d", mathx.random_choice("1..$const.active_players")))
+	local tough_count = tonumber(mathx.random_choice(string.format("1..%i", ap)))
 	for i = 1, tough_count do
 		wesnoth.fire_event("create_mob_tough")
 	end
 	local ap2 = ap * 2
-	--local mook_count = H.rand(string.format("$const.active_players..%d", H.rand("$const.active_players..$(2*$const.active_players)")))
-	local mook_count = tonumber(H.rand(string.format("%i..%i", ap, ap2)))
+	--local mook_count = mathx.random_choice(string.format("$const.active_players..%d", mathx.random_choice("$const.active_players..$(2*$const.active_players)")))
+	local mook_count = tonumber(mathx.random_choice(string.format("%i..%i", ap, ap2)))
 	for i = 1, mook_count do
 		wesnoth.fire_event("create_mob_mook")
 	end
