@@ -3224,7 +3224,7 @@ local function constructUnit(var, unstore)
 
 	wml.variables[var] = unparsed_unit
 	if unstore then
-		W.unstore_unit { variable = var }
+		wml.fire("unstore_unit", { variable = var })
 -- 		local unit_x, unit_y = get_p(unit, "x"), get_p(unit, "y")
 -- 		-- in 1.9 it might be possible to replace this w/ a call to wesnoth.select_hex()?
 -- 		W.object {

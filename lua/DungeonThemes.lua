@@ -99,11 +99,11 @@ wesnoth.wml_actions.get_prob({
 	name = "dungeon_creation.temp.prob_list",
 	op = "rand"
 })
-W.set_variables {
+wml.fire("set_variables", {
 		name="dungeon_creation.temp.prob_list",
 		mode="replace",
 		to_variable="dungeon_creation.loner_themes"
-	}
+	})
 wesnoth.wml_actions.set_prob({
 	name = "dungeon_creation.temp.prob_list",
 	item = wml.variables['dungeon_creation.temp.creep_themes[0].theme'],

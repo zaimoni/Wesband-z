@@ -97,9 +97,9 @@ function wesnoth.wml_actions.set_shroud(cfg)
 			local shroud_y=(1-b)
 			for c in string.gmatch(r,"%d") do
 				if c == "1" then
-					W.remove_shroud { side = team_num, x = shroud_x, y = shroud_y }
+					wml.fire("emove_shroud", { side = team_num, x = shroud_x, y = shroud_y })
 				else
-					W.place_shroud { side = team_num, x = shroud_x, y = shroud_y }
+					wml.fire("place_shroud", { side = team_num, x = shroud_x, y = shroud_y })
 				end
 				shroud_y=shroud_y+1
 			end

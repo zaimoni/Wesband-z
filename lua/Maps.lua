@@ -3,11 +3,11 @@ function wesnoth.wml_actions.generate_dungeon_level(cfg)
 	local height = 100 - width
 	local w, h = wesnoth.get_map_size()
 	if width ~= w or height ~= h then
-		W.replace_map {
+		wml.fire("replace_map", {
 			map = wesnoth.dofile(string.format("~add-ons/Wesband-z/maps/dungeon_template_%dx%d.lua", width, height)),
 			expand = "yes",
 			shrink = "yes"
-		}
+		})
 	end
 	wml.variables["current_dungeon_template.x"] = width
 	wml.variables["current_dungeon_template.y"] = height
@@ -22,28 +22,28 @@ function wesnoth.wml_actions.restore_map(cfg)
 	local clear = cfg.clear
 
 	local data = wml.variables[var]
-	W.replace_map {
+	wml.fire("replace_map", {
 		map = data.map,
 		expand = "yes",
 		shrink = "yes"
-	}
+	})
 
 	for i = 1, #data do
 		local s = data[i][2]
 		if s.id == "exit" then
-			W.create_exit{
+			wml.fire("create_exit", {
 				x = s.x,
 				y = s.y,
 				destination = s.destination,
 				image = s.image,
 				label = s.label
-			}
+			})
 		elseif s.id == "item" then
-			W.drop_item {
+			wml.fire("drop_item", {
 				x = s.x,
 				y = s.y,
 				s[1]
-			}
+			})
 		end
 	end
 

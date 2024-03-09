@@ -67,20 +67,20 @@ wml.variables["dungeon_exit.x"] = trapdoor_data.up.x
 wml.variables["dungeon_exit.y"] = trapdoor_data.up.y
 wesnoth.set_terrain(trapdoor_data.down.x, trapdoor_data.down.y, "Re")
 wesnoth.set_terrain(trapdoor_data.up.x, trapdoor_data.up.y, "Re")
-W.create_exit {
+wml.fire("create_exit", {
 	x = trapdoor_data.down.x,
 	y = trapdoor_data.down.y,
 	destination = "Dungeon",
 	label = string.format("Down to level %d", wml.variables["dungeon_level.current"] + 1),
 	image = "scenery/trapdoor-open.png"
-}
-W.create_exit {
+})
+wml.fire("create_exit", {
 	x = trapdoor_data.up.x,
 	y = trapdoor_data.up.y,
 	destination = "Town",
 	label = "To Overworld",
 	image = "stairs-up.png"
-}
+})
 wml.variables["dungeon_up.x"] = trapdoor_data.up.x
 wml.variables["dungeon_up.y"] = trapdoor_data.up.y
 wml.variables["dungeon_down.x"] = trapdoor_data.down.x

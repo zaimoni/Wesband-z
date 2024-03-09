@@ -128,14 +128,14 @@ function wesnoth.wml_actions.set_prob(cfg)
 			end
 		end
 		if not success then
-			W.set_variables {
+			wml.fire("set_variables", {
 					name = string.format("%s.entry", list),
 					mode = "append",
 					{ "value", {
 						item = id,
 						weight = weight
 					} }
-				}
+				})
 		end
 		local count = wml.variables[string.format("%s.total_weight", list)] or 0
 		wml.variables[string.format("%s.total_weight", list)] = count + weight
