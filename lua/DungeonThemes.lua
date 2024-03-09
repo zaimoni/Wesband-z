@@ -1,17 +1,14 @@
 local _ = wesnoth.textdomain "wesnoth-Wesband"
 
-W.set_variable { name = "dungeon_creation.temp.flow_type", rand = "1..25" }
+wml.variables['dungeon_creation.temp.flow_type'] = mathx.random_choice("1..25")
 wml.variables['dungeon_creation.temp.pool_flavor'] = "Ww"
-W.set_variable { name = "r_temp", rand = "0..6" }
-if wml.variables['r_temp'] < wml.variables['dungeon_level.current'] then
-	W.set_variable { name = "r_temp", rand = "0..2" }
-	if wml.variables['r_temp'] ~= 0 then
+if mathx.random_choice("0..6") < wml.variables['dungeon_level.current'] then
+	if mathx.random_choice("0..2") ~= 0 then
 		wml.variables['dungeon_creation.temp.pool_flavor'] = "Ss"
 	end
 end
-W.set_variable { name = "r_temp", rand = "6..14" }
-if wml.variables['r_temp'] < wml.variables['dungeon_level.current'] then
-	W.set_variable { name = "r_temp", rand = "0..2" }
+if mathx.random_choice("6..14")< wml.variables['dungeon_level.current'] then
+	wml.variables['r_temp'] = mathx.random_choice("0..2")
 	if wml.variables['r_temp'] == 1 then
 		wml.variables['dungeon_creation.temp.pool_flavor'] = "Ql"
 	elseif wml.variables['r_temp'] == 2 then
@@ -19,28 +16,20 @@ if wml.variables['r_temp'] < wml.variables['dungeon_level.current'] then
 	end
 end
 wml.variables['dungeon_creation.temp.flow_flavor'] = wml.variables['dungeon_creation.temp.pool_flavor']
-W.set_variable { name = "r_temp", rand = "4..9" }
-if wml.variables['r_temp'] < wml.variables['dungeon_level.current'] then
-	W.set_variable { name = "r_temp", rand = "0..2" }
-	if wml.variables['r_temp'] == 0 then
+if mathx.random_choice("4..9") < wml.variables['dungeon_level.current'] then
+	if mathx.random_choice("0..2") == 0 then
 		wml.variables['dungeon_creation.temp.flow_flavor'] = "Qxu"
 	end
 end
-W.set_variable { name = "dungeon_creation.temp.wall_flavor", rand = "Xu,Xu,Xos" }
+wml.variables['dungeon_creation.temp.wall_flavor'] = mathx.random_choice("Xu,Xu,Xos")
 wesnoth.wml_actions.get_prob({
 	variable = "dungeon_creation.temp.terrain_variation",
 	name = "dungeon_creation.terrains",
 	op = "rand"
 })
-W.set_variables {
-		name = "dungeon_creation.temp.prob_list",
-		to_variable = "dungeon_creation.cluster_themes"
-	}
-W.set_variables {
-		name = "dungeon_creation.temp.loner_themes",
-		to_variable = "dungeon_creation.loner_themes"
-	}
-W.set_variable { name = "dungeon_creation.temp.crawly_theme", rand = "cave,slime" }
+wml.variables['dungeon_creation.temp.prob_list'] = wml.variables['dungeon_creation.cluster_themes']
+wml.variables['dungeon_creation.temp.loner_themes'] = wml.variables['dungeon_creation.loner_themes']
+wml.variables['dungeon_creation.temp.crawly_theme'] = mathx.random_choice("cave,slime")
 if wml.variables['dungeon_creation.temp.terrain_variation'] == "Wwf" then
 	if wml.variables['dungeon_creation.water_level_counter'] < 2 then
 		wml.variables['dungeon_creation.water_level_counter'] = wml.variables['dungeon_creation.water_level_counter'] + 1
@@ -137,8 +126,7 @@ else
 			variable = "terrain_match"
 		}
 	if wml.variables['dungeon_creation.temp.terrain_variation'] == "Wwf" or (wml.variables['dungeon_creation.temp.flow_flavor'] == "" and wml.variables['dungeon_creation.temp.flow_type'] < 11) or wml.variables['terrain_match'] then
-		--W.set_variable { name = "dungeon_creation.temp.water_theme_position", rand = "2..$($const.max_enemy_count-1)" }
-		W.set_variable { name = "dungeon_creation.temp.water_theme_position", rand = string.format("2..%d", wml.variables['const.max_enemy_count'] -1) }
+		wml.variables['dungeon_creation.temp.water_theme_position'] = mathx.random_choice(string.format("2..%d", wml.variables['const.max_enemy_count'] -1))
 		wesnoth.wml_actions.set_prob({
 			name = "dungeon_creation.temp.prob_list",
 			item = "water",

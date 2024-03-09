@@ -1446,12 +1446,10 @@ end
 
 local function createWeapon(wtype, level, attr, var)
 	if attr == "random" then
-		W.set_variable { name = "r_temp", rand = "rusty,unbalanced,none,none,none,none,none,none,heavy,sharp,light,balanced" }
-		attr = wml.variables['r_temp']
-		wml.variables['r_temp'] = nil
+		attr = mathx.random_choice("rusty,unbalanced,none,none,none,none,none,none,heavy,sharp,light,balanced")
 	end
 
-	local ench_chance = math.random(1000) + level * 2
+	local ench_chance = mathx.random(1000) + level * 2
 	local rank = level * 5 / 12
 
 	local function addMagicAdjust(school, wt)
@@ -1743,9 +1741,7 @@ end
 
 local function createArmor(atype, rank, attr, var)
 	if attr == "random" then
-		W.set_variable { name = "r_temp", rand = "thick,light,polished,rusty,new,battered,none,none,none,none,none,none" }
-		attr = wml.variables['r_temp']
-		wml.variables['r_temp'] = nil
+		attr =  mathx.random_choice("thick,light,polished,rusty,new,battered,none,none,none,none,none,none")
 	end
 
 -- 	if ench_chance >= 995 then
@@ -1855,9 +1851,9 @@ local function createArmor(atype, rank, attr, var)
 		end
 
 		local function adjustResists(rt)
-			W.set_variable { name = "r_temp", rand = "0..3" }
+			wml.variables['r_temp'] = mathx.random_choice("0..3")
 			if wml.variables['r_temp'] == 0 then
-				W.set_variable { name = "r_temp", rand = "arcane,blade,cold,fire,impact,pierce" }
+				wml.variables['r_temp'] = mathx.random_choice("arcane,blade,cold,fire,impact,pierce")
 				rt[wml.variables['r_temp']] = (rt[wml.variables['r_temp']] or 0) + rank
 			else
 				r_mult = r_mult * rank_frac

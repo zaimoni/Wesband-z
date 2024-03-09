@@ -32,9 +32,9 @@ end
 
 local function place_random_chamber(x, y)
 	local mask_name
-	W.set_variable { name = "r_temp", rand = "1..35" }
+	wml.variables['r_temp'] = mathx.random_choice("1..35")
 	if wml.variables['r_temp'] == 35 then
-		W.set_variable { name = "r_temp", rand = "33..35" }
+		wml.variables['r_temp'] = mathx.random_choice("33..35")
 	end
 	if wml.variables['r_temp'] == 1 then
 		mask_name = "diamond_large_upper"
@@ -105,14 +105,7 @@ local function place_random_chamber(x, y)
 	elseif wml.variables['r_temp'] == 34 then
 		mask_name = "diamond_large8_pool_center"
 	else
-		W.set_variable { name = "r_temp", rand = "0..2" }
-		if wml.variables['r_temp'] == 0 then
-			mask_name = "diamond_huge_columns"
-		elseif wml.variables['r_temp'] == 1 then
-			mask_name = "diamond_huge_columns2"
-		else
-			mask_name = "diamond_huge_maze"
-		end
+		mask_name = mathx.random_choide("diamond_huge_columns,diamond_huge_columns2,diamond_huge_maze")
 	end
 	if not mask_table[mask_name] then
 		mask_table[mask_name] = wesnoth.dofile(string.format("~add-ons/Wesband-z/masks/%s.lua", mask_name))
@@ -134,8 +127,7 @@ local function select_layout(edge_room_chance, extra_path_chance, stray_path_cha
 		local name = string.format("%d,%d", x, y)
 		local accept_room
 		if x == 1 or y == 1 or x == x_room_limit or y == y_room_limit then
-			W.set_variable { name = "r_temp", rand = "0..99" }
-			accept_room = wml.variables["r_temp"] < edge_room_chance
+			accept_room = mathx.random_choice("0..99") < edge_room_chance
 		else
 			accept_room = true
 		end
@@ -188,19 +180,16 @@ local function select_layout(edge_room_chance, extra_path_chance, stray_path_cha
 	-- selection of paths
 	local candidate_count, path_index, accept_path = #candidate_paths
 	while island_count > 1 do
-		W.set_variable { name = "r_temp", rand = string.format("1..%d", candidate_count) }
-		path_index = wml.variables["r_temp"]
+		path_index = mathx.random_choice(string.format("1..%d", candidate_count))
 		if rooms[candidate_paths[path_index][1]] and rooms[candidate_paths[path_index][2]] then
 			accept_path = union(candidate_paths[path_index][1], candidate_paths[path_index][2])
 			if accept_path then
 				island_count = island_count - 1
 			else
-				W.set_variable { name = "r_temp", rand = "0..99" }
-				accept_path = wml.variables["r_temp"] < extra_path_chance
+				accept_path = mathx.random_choice("0..99") < extra_path_chance
 			end
 		elseif rooms[candidate_paths[path_index][1]] or rooms[candidate_paths[path_index][2]] then
-			W.set_variable { name = "r_temp", rand = "0..99" }
-			accept_path = wml.variables["r_temp"] < stray_path_chance
+			accept_path = mathx.random_choice("0..99") < stray_path_chance
 		else
 			accept_path = false
 		end
@@ -211,11 +200,10 @@ local function select_layout(edge_room_chance, extra_path_chance, stray_path_cha
 		candidate_count = candidate_count - 1
 	end
 	for i = 1, candidate_count do
-		W.set_variable { name = "r_temp", rand = "0..99" }
 		if rooms[candidate_paths[i][1]] and rooms[candidate_paths[i][2]] then
-			accept_path = wml.variables["r_temp"] < extra_path_chance
+			accept_path = mathx.random_choice("0..99") < extra_path_chance
 		elseif rooms[candidate_paths[i][1]] or rooms[candidate_paths[i][2]] then
-			accept_path = wml.variables["r_temp"] < stray_path_chance
+			accept_path = mathx.random_choice("0..99") < stray_path_chance
 		else
 			accept_path = false
 		end

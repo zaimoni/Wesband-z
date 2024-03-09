@@ -3,13 +3,10 @@ local function randomize_terrain(base, variations)
 			terrain = base,
 			variable = "dungeon_creation.temp.rand_terrain"
 		}
-	W.set_variable { name = "r_temp", rand = "0,0,0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,4,4,4,5,5,6" }
-	local rand_count = wml.variables['r_temp']
+	local rand_count = tonumber(mathx.random_choice("0,0,0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,4,4,4,5,5,6"))
 	while rand_count < wml.variables['dungeon_creation.temp.rand_terrain.length'] do
-		W.set_variable { name = "r_temp", rand = variations }
-		wesnoth.set_terrain(wml.variables[("dungeon_creation.temp.rand_terrain[%d].x"):format(rand_count)], wml.variables[("dungeon_creation.temp.rand_terrain[%d].y"):format(rand_count)], wml.variables['r_temp'])
-		W.set_variable { name = "r_temp", rand = "1,2,2,3,3,3,4,4,4,4" }
-		rand_count = rand_count + wml.variables['r_temp']
+		wesnoth.set_terrain(wml.variables[("dungeon_creation.temp.rand_terrain[%d].x"):format(rand_count)], wml.variables[("dungeon_creation.temp.rand_terrain[%d].y"):format(rand_count)], mathx.random_choice(variations))
+		rand_count = rand_count + mathx.random_choice("1,2,2,3,3,3,4,4,4,4")
 	end
 end
 
