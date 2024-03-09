@@ -122,7 +122,7 @@ function wesnoth.wml_actions.get_defense(cfg)
 	local u
 	if cfg.unit then
 		local upath = wml.variables[cfg.unit]
-		u = wesnoth.get_units({ id = upath.id })[1]
+		u = wesnoth.units.find_on_map({ id = upath.id })[1]
 	else
 		u = (wesnoth.create_unit { type = cfg.type or werr("[get_defense] expects either a unit= attribute or a type= attribute") })
 	end
@@ -135,7 +135,7 @@ function wesnoth.wml_actions.get_move_cost(cfg)
 	local u
 	if cfg.unit then
 		local upath = wml.variables[cfg.unit]
-		u = wesnoth.get_units({ id = upath.id })[1]
+		u = wesnoth.units.find_on_map({ id = upath.id })[1]
 	else
 		u = (wesnoth.create_unit { type = cfg.type }) or werr("[get_defense] expects either a unit= attribute or a type= attribute")
 	end

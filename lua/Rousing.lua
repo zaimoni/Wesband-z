@@ -76,7 +76,7 @@ function wesnoth.wml_actions.rouse_units(cfg)
 	local min_index = -1
 	local hidden = false
 	local rouse_enemies
-	local u = wesnoth.get_unit(x, y)
+	local u = wesnoth.units.get(x, y)
 	if u then
 		local v = u.variables.__cfg
 		local a = wml.get_child(v, "abilities")
@@ -135,7 +135,7 @@ function wesnoth.wml_actions.rouse_units(cfg)
 			{ "filter", {} }
 		}
 		if rouse_list then
-			rouse_enemies = wesnoth.get_units( {
+			rouse_enemies = wesnoth.units.find_on_map( {
 					side = wml.variables['const.enemy_sides'],
 					{ "filter_location", { find_in = "rouse_temp_locs" } },
 					{ "filter_wml", {
@@ -146,7 +146,7 @@ function wesnoth.wml_actions.rouse_units(cfg)
 					} }
 				} )
 		else
-			rouse_enemies = wesnoth.get_units( {
+			rouse_enemies = wesnoth.units.find_on_map( {
 					side = wml.variables['const.enemy_sides'],
 					{ "filter_location", { find_in = "rouse_temp_locs" } },
 					{ "filter_wml", {
@@ -197,7 +197,7 @@ function wesnoth.wml_actions.rouse_units(cfg)
 						radius = uu.max_moves,
 						{ "filter", {} }
 					}
-					local rouse_enemies_near = wesnoth.get_units( {
+					local rouse_enemies_near = wesnoth.units.find_on_map( {
 							side = uu.side,
 							{ "filter_location", { find_in = "rouse_temp_locs" } },
 							{ "filter_wml", {
@@ -220,7 +220,7 @@ function wesnoth.wml_actions.rouse_units(cfg)
 	end
 	if min_index > -1 then
 		wml.variables["rouse_list"] = rouse_list
-		local visible = wesnoth.get_units( {
+		local visible = wesnoth.units.find_on_map( {
 				id = rouse_enemies[min_index].id,
 				{ "filter_vision", { side = wml.variables['side_number'] } }
 			} )
