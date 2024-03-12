@@ -1851,14 +1851,13 @@ local function createArmor(atype, rank, attr, var)
 		end
 
 		local function adjustResists(rt)
-			wml.variables['r_temp'] = mathx.random_choice("0..3")
-			if wml.variables['r_temp'] == 0 then
-				wml.variables['r_temp'] = mathx.random_choice("arcane,blade,cold,fire,impact,pierce")
-				rt[wml.variables['r_temp']] = (rt[wml.variables['r_temp']] or 0) + rank
-			else
-				r_mult = r_mult * rank_frac
+			-- don't want "extra resist" to feel like it needs avoiding when event-hacking
+			r_mult = r_mult * rank_frac
+
+			if 0 == mathx.random_choice("0..3") then
+				local extra_resist = mathx.random_choice("arcane,blade,cold,fire,impact,pierce")
+				rt[extra_resist] = (rt[extra_resist] or 0) + rank
 			end
-			wml.variables['r_temp'] = nil
 
 			if not rt.arcane then
 				rt.arcane = 0
