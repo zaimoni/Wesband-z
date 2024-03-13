@@ -244,6 +244,7 @@ function wesnoth.wml_actions.get_prob(cfg)
 	local var   = cfg.variable	or werr("[get_prob] requires a variable= key.")
 	local name  = cfg.name		or werr("[get_prob] requires a name= key.")
 	local list  = wml.variables[name]
+	if nil == list then werr("[get_prob] name " .. name .. " didn't actually name a variable") end
 	if list.literal then
 		list = prob_list_eval(wml.tovconfig(list))
 	end
